@@ -29,7 +29,7 @@ WORKFLOW_META = {
 def sequence(monkeypatch):
     """按实际请求顺序提供响应；意外额外请求会立即失败。"""
 
-    def run(args, bodies):
+    def run(args, bodies, *, region="global"):
         requests = []
 
         def handler(request):
@@ -49,7 +49,7 @@ def sequence(monkeypatch):
                 **kw,
             ),
         )
-        result = CliRunner().invoke(commands.cli, ["--json", *args])
+        result = CliRunner().invoke(commands.cli, ["--region", region, "--json", *args])
         return result, requests
 
     return run
@@ -63,9 +63,8 @@ def metadata(item):
     return ok({"effect_items": [item]})
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 def test_usage_filters_and_key_scope(region, invoke, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
     result, requests = invoke(
         [
             "--json",
@@ -84,6 +83,7 @@ def test_usage_filters_and_key_scope(region, invoke, monkeypatch):
             "refund",
         ],
         response=ok({"items": [], "next_cursor": "", "has_more": False}),
+        region=region,
     )
     assert result.exit_code == 0, result.output
     assert len(requests) == 1 and requests[0].method == "POST"
@@ -147,9 +147,8 @@ def test_usage_protocol_errors_keep_trace(body, invoke):
     assert result.exit_code == 1 and error["type"] == "protocol" and error["trace_id"]
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 def test_template_list_filters(region, invoke, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
     result, requests = invoke(
         [
             "--json",
@@ -167,6 +166,7 @@ def test_template_list_filters(region, invoke, monkeypatch):
             "20",
         ],
         response=ok({"effect_items": []}),
+        region=region,
     )
     assert result.exit_code == 0 and len(requests) == 1
     assert requests[0].url.host == (
@@ -181,7 +181,7 @@ def test_template_list_filters(region, invoke, monkeypatch):
     }
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize(
     "images,effect_type,field,expected",
     [
@@ -200,7 +200,6 @@ def test_standard_template_metadata_then_single_write(
     sequence,
     monkeypatch,
 ):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
     args = [
         "template",
         "generate",
@@ -225,6 +224,7 @@ def test_standard_template_metadata_then_single_write(
             metadata({**STANDARD_META, "effect_type": effect_type}),
             ok({"video_id": 123}),
         ],
+        region=region,
     )
     assert result.exit_code == 0, result.output
     assert [r.method for r in requests] == ["GET", "POST"]
@@ -239,9 +239,8 @@ def test_standard_template_metadata_then_single_write(
     assert json.loads(result.stdout)["discovery_trace_id"] != json.loads(result.stdout)["trace_id"]
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 def test_workflow_typed_inputs_and_default_text(region, sequence, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
     inputs = [
         {"input_key": "hero", "img_id": 21},
         {"input_key": "sound", "audio_media_id": 41},
@@ -261,12 +260,15 @@ def test_workflow_typed_inputs_and_default_text(region, sequence, monkeypatch):
             metadata({**WORKFLOW_META, "input_limit": fields}),
             ok({"task_id": 456, "status": 5}),
         ],
+        region=region,
     )
     assert result.exit_code == 0, result.output
     assert len(requests) == 2 and requests[1].url.path == "/openapi/v2/template/generate"
     assert json.loads(requests[1].content) == {"template_id": 11, "inputs": inputs}
     body = json.loads(result.stdout)
-    assert body["submission"] == "accepted" and body["query_command"] == "template get --id 456"
+    assert body["submission"] == "accepted" and body["query_command"] == (
+        f"pixverse-api --region {region} --json template get --id 456"
+    )
 
 
 @pytest.mark.parametrize(
@@ -388,10 +390,9 @@ def test_template_write_failure_never_falls_back_or_retries(response, sequence):
     assert json.loads(result.stderr)["error"]["trace_id"]
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize("image", [False, True])
 def test_base_generation_webhook_and_negative_prompt(region, image, invoke, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
     args = ["video", "from-image", "--img-id", "21"] if image else ["video", "generate"]
     result, requests = invoke(
         [
@@ -406,7 +407,8 @@ def test_base_generation_webhook_and_negative_prompt(region, image, invoke, monk
             "--no-audio",
             "--seed",
             "0",
-        ]
+        ],
+        region=region,
     )
     assert result.exit_code == 0, result.output
     body = json.loads(requests[0].content)

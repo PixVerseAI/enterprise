@@ -14,7 +14,7 @@ dependencies = ["click>=8.1,<9", "httpx>=0.27,<1", "jsonschema>=4.23,<5"]
 dev = ["pytest>=8,<10", "ruff>=0.9,<1", "build>=1,<2"]
 
 [project.scripts]
-pixverse = "cli.cli:main"
+pixverse-api = "cli.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["cli", "cli.skills"]

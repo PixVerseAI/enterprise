@@ -1,13 +1,13 @@
 ---
 name: pixverse-platform
-description: 使用 pixverse CLI 在国内或海外生产开放平台上传素材、查询余额、生成和编辑视频，以及调用电商 Native/Template 和统一 V3 MV。
+description: 使用 pixverse-api CLI 在国内或海外生产开放平台上传素材、查询余额、生成和编辑视频，以及调用电商 Native/Template 和统一 V3 MV。
 ---
 
 # PixVerse Platform
 
-使用已安装的 `pixverse`；通过 `PIXVERSE_REGION=cn|ov`、`PIXVERSE_API_KEY` 选择对应生产API。凭据由用户自行在运行环境配置；不要读取认证文件、打印Key或把Key放进参数、文档。只使用同地区、同账号资源。
+使用已安装的 `pixverse-api`；根选项 `--region global|cn` 选择对应生产 API，默认 `global`，不读取地区环境变量。API Key 仅通过 `PIXVERSE_API_KEY` 提供。凭据由用户自行在运行环境配置；不要读取认证文件、打印Key或把Key放进参数、文档。只使用同地区、同账号资源。
 
-先读子命令的 `--help`。全局 `--json`、`--timeout` 放在子命令之前。成功JSON在stdout，错误在stderr；退出码2为配置/输入错误，1为请求错误或任务失败终态。
+先读子命令的 `--help`。全局 `--region`、`--json`、`--timeout` 放在子命令之前。成功JSON在stdout，错误在stderr；退出码2为配置/输入错误，1为请求错误或任务失败终态。
 
 ## 命令选择
 
@@ -36,9 +36,9 @@ MV角色图与风格图各最多1张，风格图只用于Custom；Custom至少�
 
 ## 提交与查询
 
-创建可能消耗真实生产点数，仅在用户授权后执行。创建响应的`submission=accepted`和`response.Resp.video_id`表示受理；默认只报告ID，只有用户要求等待/监控时才主动查询。查询使用`pixverse --json video get --id <video_id>`，不要重新创建。
+创建可能消耗真实生产点数，仅在用户授权后执行。创建响应的`submission=accepted`和`response.Resp.video_id`表示受理；默认只报告ID，只有用户要求等待/监控时才主动查询。查询使用`pixverse-api --region <本次地区> --json video get --id <video_id>`，查询沿用创建时的地区，可直接使用返回的 `query_command`；不要重新创建。
 
-Workflow模板创建返回`response.Resp.task_id`，使用`pixverse --json template get --id <task_id>`；不要把task_id当video_id。成功视频链接汇总在output_urls，只有一条时另有output_url。图片/混合输出及既有排除Agent不因模板入口扩大接入范围。
+Workflow模板创建返回`response.Resp.task_id`，使用`pixverse-api --region <本次地区> --json template get --id <task_id>`；不要把task_id当video_id。成功视频链接汇总在output_urls，只有一条时另有output_url。图片/混合输出及既有排除Agent不因模板入口扩大接入范围。
 
 `task_status`同时归一化普通数字状态和Agent的running/succeeded/failed状态。成功结果统一在`output_url`，原协议保留在response中。`output_url_verified=false`表示CLI没有探测链接，不据此声称成片可访问。网络超时可能已经创建任务，禁止直接重试写请求。`Resp.credits`不替代最终扣费账本。
 

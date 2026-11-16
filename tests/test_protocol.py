@@ -115,12 +115,13 @@ def test_cli_help_fields_enums_and_defaults_match_contract():
             assert covered == set(schema["properties"]), tool
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize("prompt", [None, "", " ", "x" * 5000])
 def test_i2v_optional_prompt_preserves_intent(region, prompt, invoke, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
     args = ["--json", "video", "from-image", "--img-id", "101"]
-    result, requests = invoke(args + ([] if prompt is None else ["--prompt", prompt]))
+    result, requests = invoke(
+        args + ([] if prompt is None else ["--prompt", prompt]), region=region
+    )
     assert result.exit_code == 0, result.output
     payload = json.loads(requests[0].content)
     assert ("prompt" in payload) == (prompt is not None)
@@ -147,13 +148,12 @@ def test_fusion_duration_not_rewritten(references, duration, invoke):
     assert payload["seed"] == 0 and payload["generate_audio_switch"] is False
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize("quality", ["360p", "540p", "720p", "1080p"])
 def test_avatar_quality_contract(region, quality, invoke, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
     result, requests = invoke(["--json", "video", "avatar", "--img-id", "101",
                                "--audio-media-id", "201", "--quality", quality,
-                               "--prompt", "x" * 2048])
+                               "--prompt", "x" * 2048], region=region)
     assert result.exit_code == 0, result.output
     assert json.loads(requests[0].content)["quality"] == quality
 

@@ -5,7 +5,45 @@ import pytest
 from cli.config import PRODUCTION_URLS
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("legacy", [None, "cn", "ov", "invalid"])
+@pytest.mark.parametrize("region", [None, "global", "cn"])
+def test_region_option_overrides_legacy_environment(legacy, region, invoke, monkeypatch):
+    """默认请求走 global，旧环境变量不能覆盖默认或显式地区。"""
+    if legacy is not None:
+        monkeypatch.setenv("PIXVERSE_REGION", legacy)
+    args = [] if region is None else ["--region", region]
+    result, requests = invoke([*args, "--json", "account", "balance"])
+    expected = region or "global"
+    assert result.exit_code == 0, result.output
+    assert str(requests[0].url) == PRODUCTION_URLS[expected] + "/openapi/v2/account/balance"
+    assert json.loads(result.stdout)["region"] == expected
+
+
+@pytest.mark.parametrize("region", ["ov", "GLOBAL", "test", "preview", "../cn"])
+def test_invalid_region_stops_before_network(region, invoke):
+    """非法根选项应由命令协议直接拒绝，不能触发任何 HTTP 请求。"""
+    result, requests = invoke(["--region", region, "--json", "account", "balance"])
+    assert result.exit_code == 2 and not requests
+    assert "global" in result.output and "cn" in result.output
+
+
+@pytest.mark.parametrize("region", ["cn", "global"])
+def test_task_query_command_preserves_region(region, invoke):
+    """创建返回的完整查询命令可以直接执行，并沿用创建时的地区。"""
+    import shlex
+
+    result, requests = invoke(["--json", "video", "generate", "--prompt", "a cat"],
+                              region=region)
+    assert result.exit_code == 0, result.output
+    query = shlex.split(json.loads(result.stdout)["query_command"])
+    assert query == ["pixverse-api", "--region", region, "--json", "video", "get", "--id", "123"]
+    follow_up, queries = invoke(query[1:], response={"ErrCode": 0, "Resp": {"status": 5}})
+    assert follow_up.exit_code == 0
+    assert queries[0].url.host == requests[0].url.host
+    assert queries[0].method == "GET" and queries[0].url.path.endswith("/video/result/123")
+
+
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize(
     "args,method,path",
     [
@@ -20,8 +58,7 @@ from cli.config import PRODUCTION_URLS
     ],
 )
 def test_shared_command_routing(region, args, method, path, invoke, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
-    result, requests = invoke(["--json", *args])
+    result, requests = invoke(["--json", *args], region=region)
     assert result.exit_code == 0, result.output
     assert len(requests) == 1
     request = requests[0]
@@ -78,15 +115,14 @@ def test_generation_optional_fields_are_not_lost(invoke):
     }
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize("kind,field", [("image", "image"), ("media", "file")])
 @pytest.mark.parametrize("source", ["file", "url"])
 def test_multipart_uploads(region, kind, field, source, invoke, tmp_path, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
     media_file = tmp_path / ("素材.png" if kind == "image" else "素材.wav")
     media_file.write_bytes(b"synthetic-upload-bytes")
     value = str(media_file) if source == "file" else "https://example.com/media"
-    result, requests = invoke(["--json", kind, "upload", "--" + source, value])
+    result, requests = invoke(["--json", kind, "upload", "--" + source, value], region=region)
     assert result.exit_code == 0, result.output
     assert len(requests) == 1
     request = requests[0]

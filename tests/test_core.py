@@ -8,7 +8,7 @@ from cli.client import APIError, PlatformClient, redact
 from cli.config import PRODUCTION_URLS, Config, ConfigurationError
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 def test_production_routing_and_unique_trace(region):
     traces = []
 
@@ -27,11 +27,20 @@ def test_production_routing_and_unique_trace(region):
     assert len(set(traces)) == 2
 
 
-@pytest.mark.parametrize("region", ["", "us", "CN", "test", "../ov"])
-def test_region_required_and_strict(region, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
-    with pytest.raises(ConfigurationError, match="PIXVERSE_REGION"):
-        Config.from_env()
+@pytest.mark.parametrize("region", ["", "ov", "us", "CN", "test", "../global"])
+def test_explicit_region_is_strict(region):
+    """地区参数只接受公开的两个取值，不能切换到其他环境。"""
+    with pytest.raises(ConfigurationError, match="--region"):
+        Config.from_env(region=region)
+
+
+@pytest.mark.parametrize("legacy", ["cn", "ov", "invalid"])
+def test_legacy_region_environment_is_ignored(legacy, monkeypatch):
+    """历史地区环境变量不能覆盖默认值或显式选择。"""
+    monkeypatch.setenv("PIXVERSE_REGION", legacy)
+    assert Config.from_env().region == "global"
+    assert Config.from_env().base_url == "https://app-api.pixverse.ai"
+    assert Config.from_env(region="cn").base_url == "https://app-api.pixverseai.cn"
 
 
 @pytest.mark.parametrize("key", ["", " ", "a b", "a\nb", "中文"])
@@ -42,7 +51,7 @@ def test_key_validation(key, monkeypatch):
 
 
 def test_no_configuration_fallback(monkeypatch):
-    monkeypatch.delenv("PIXVERSE_REGION")
+    monkeypatch.delenv("PIXVERSE_API_KEY")
     monkeypatch.setenv("PIX_CN_OPENAPI_API_KEY_PROD", "synthetic-legacy")
     with pytest.raises(ConfigurationError):
         Config.from_env()

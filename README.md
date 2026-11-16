@@ -15,22 +15,22 @@ Python 3.10 or later is required. From the repository root:
 
 ```bash
 pipx install .
-pixverse --help
+pixverse-api --help
 ```
 
-Set `PIXVERSE_REGION=ov` and provide your production API key through `PIXVERSE_API_KEY` using a secure environment or secret manager. Do not put real keys in source control, command arguments, or chat. The CLI does not load `.env` files or local skill credentials.
+The command is `pixverse-api`. The root option `--region global` selects the production API and is the default; the CLI does not read a region environment variable. Provide your production API key through `PIXVERSE_API_KEY` using a secure environment or secret manager. Do not put real keys in source control, command arguments, or chat. The CLI does not load `.env` files or local skill credentials.
 
 Production Platform API: `https://app-api.pixverse.ai`.
 
 The CLI uses the fixed production API URL. It does not accept arbitrary API base URLs, follow redirects, or use implicit proxies. Use keys, asset IDs, and task IDs belonging to the same API endpoint and account.
 
 ```bash
-pixverse --json account balance
-pixverse image upload --file /absolute/path/image.png
-pixverse media upload --url https://example.com/audio.wav
-pixverse video generate --prompt "A cat walking through a meadow" --no-audio
-pixverse video from-image --img-id 123456 --prompt "The subject walks forward"
-pixverse --json video get --id 123456
+pixverse-api --json account balance
+pixverse-api image upload --file /absolute/path/image.png
+pixverse-api media upload --url https://example.com/audio.wav
+pixverse-api video generate --prompt "A cat walking through a meadow" --no-audio
+pixverse-api video from-image --img-id 123456 --prompt "The subject walks forward"
+pixverse-api --json video get --id 123456
 ```
 
 IDs and URLs above are examples. Replace them with resources belonging to the same API endpoint and account.
@@ -46,44 +46,44 @@ IDs and URLs above are examples. Replace them with resources belonging to the sa
 | Templates and tasks | `template list`, `template generate`, `template get`, `video get`, `video restyle-list` |
 | Agents | `agent ecommerce-native`, `agent ecommerce-template`, `agent mv` |
 
-Use `pixverse <command> --help` for detailed options. Source-video operations require exactly one of `--source-video-id` or `--video-media-id`. LipSync and Avatar accept either an audio media ID or both TTS fields. Mask selection is a separate step; Swap requires a mask and keyframe from the same source video.
+Use `pixverse-api <command> --help` for detailed options. Source-video operations require exactly one of `--source-video-id` or `--video-media-id`. LipSync and Avatar accept either an audio media ID or both TTS fields. Mask selection is a separate step; Swap requires a mask and keyframe from the same source video.
 
 The two ecommerce commands use their respective fixed agent IDs. MV uses `vibe_mv_v3_custom`; audio validation is asynchronous where supported by the target backend. Template generation first checks template metadata; standard templates return a `video_id`, whereas workflow templates return a `task_id`. Custom voice deletion only accepts a `custom_` speaker ID.
 
 `account usage` queries consumption and refunds for the current key. The first page requires `--start-time` and `--end-time` in `YYYY-MM-DD HH:MM:SS` format, covers at most 30 days, and is interpreted in UTC. Later pages use the returned cursor without other filters. The default page size is 50 and the maximum is 100.
 
 ```bash
-pixverse --json account usage --start-time '2026-11-01 00:00:00' --end-time '2026-11-02 00:00:00' \
+pixverse-api --json account usage --start-time '2026-11-01 00:00:00' --end-time '2026-11-02 00:00:00' \
   --creation-type text_to_video --credits-status consume --limit 20
-pixverse --json template list --mode standard --page 1 --page-size 20
-pixverse --json template generate --id 123 --img-id 11 --model v5.6 --duration 5 --quality 720p
-pixverse --json template get --id 234567
+pixverse-api --json template list --mode standard --page 1 --page-size 20
+pixverse-api --json template generate --id 123 --img-id 11 --model v5.6 --duration 5 --quality 720p
+pixverse-api --json template get --id 234567
 ```
 
 `template list` returns video template metadata. Standard template generation requires explicit model, duration and quality; supply images in order as required by the template. Workflow templates use named `--input` JSON objects from their input metadata and only video outputs are supported. API-side availability and permissions remain authoritative.
 
 ```bash
-pixverse video f2v --first-frame-img 11 --last-frame-img 12 --prompt "Day turns to night"
-pixverse video fusion --img-id 11 --img-id 12 --prompt "The subjects interact"
-pixverse video extend --source-video-id 21 --prompt "Continue forward" --duration 5
-pixverse video expand --video-media-id 22 --aspect-ratio 9:16 --quality 720p
-pixverse video sound-effect --video-media-id 22 --sound-effect-content 'gentle rain' --no-original-sound
-pixverse video multi-transition --frame '{"img_id":11,"duration":5}' --frame '{"img_id":12}'
-pixverse video lipsync --video-media-id 22 --audio-media-id 41
-pixverse video avatar --img-id 11 --tts-speaker-id Auto --tts-content "Welcome"
-pixverse video mask --video-media-id 22 --keyframe-id 0
-pixverse video swap --video-media-id 22 --keyframe-id 0 --mask-id 0 --img-id 12
+pixverse-api video f2v --first-frame-img 11 --last-frame-img 12 --prompt "Day turns to night"
+pixverse-api video fusion --img-id 11 --img-id 12 --prompt "The subjects interact"
+pixverse-api video extend --source-video-id 21 --prompt "Continue forward" --duration 5
+pixverse-api video expand --video-media-id 22 --aspect-ratio 9:16 --quality 720p
+pixverse-api video sound-effect --video-media-id 22 --sound-effect-content 'gentle rain' --no-original-sound
+pixverse-api video multi-transition --frame '{"img_id":11,"duration":5}' --frame '{"img_id":12}'
+pixverse-api video lipsync --video-media-id 22 --audio-media-id 41
+pixverse-api video avatar --img-id 11 --tts-speaker-id Auto --tts-content "Welcome"
+pixverse-api video mask --video-media-id 22 --keyframe-id 0
+pixverse-api video swap --video-media-id 22 --keyframe-id 0 --mask-id 0 --img-id 12
 ```
 
 I2V accepts an optional prompt of up to 5000 characters; its aspect ratio follows the input image. Fusion supports image references and V6 Omni video references, including `--aspect-ratio auto`. Omitted Fusion duration is not sent; explicit values, including zero, are preserved. Use positive seconds for image mode and zero for Omni video mode; Platform validates the actual combination. MultiTransition takes at least two ordered frames. Each duration applies to the starting frame of a segment; omit it or set zero on the final frame. Platform validates model-specific counts and duration limits. Modify supports mask IDs or mask URLs, not both; mask IDs require a keyframe ID. Mask selection accepts an optional keyframe ID without injecting a default, and does not automatically run Swap or Modify. Avatar accepts 360p/540p/720p/1080p and an optional prompt of up to 2048 characters; Platform validates Avatar TTS text requirements.
 
 ```bash
-pixverse agent ecommerce-native --img-id 11 --prompt "Show the product" --duration 15 --language-code en-US
-pixverse agent ecommerce-template --img-id 11 --prompt "Show the product" --duration 15 \
+pixverse-api agent ecommerce-native --img-id 11 --prompt "Show the product" --duration 15 --language-code en-US
+pixverse-api agent ecommerce-template --img-id 11 --prompt "Show the product" --duration 15 \
   --language-code en-US --video-style polished_commercials
-pixverse agent mv --audio-media-id 41 --img-id 11 --mv-style Custom --preserve-outfit
-pixverse voice create --name 'Brand voice' --audio-media-id 41
-pixverse voice list --type custom --scene avatar --page-size 20
+pixverse-api agent mv --audio-media-id 41 --img-id 11 --mv-style Custom --preserve-outfit
+pixverse-api voice create --name 'Brand voice' --audio-media-id 41
+pixverse-api voice list --type custom --scene avatar --page-size 20
 ```
 
 Ecommerce requires at least one image reference and a duration of 15, 30, 45 or 60 seconds. Platform validates image counts and avatar availability. The template variant also requires a supported video style. MV supports a character image and a Custom-only style image, with at least one image required for Custom. Optional lyric timestamps can be supplied from a local JSON file using `--lyric-timestamp-file`; start/end must be nonnegative finite numbers. Platform validates ordering, overlap, text and audio matching. Custom voice creation uses an uploaded audio sample of at most 30 seconds; availability and limits are validated by Platform. `voice list` defaults to the combined system/custom endpoint, `--type all`, and 20 entries per page; supported page sizes are 10/20/50/100.
@@ -95,6 +95,8 @@ JSON responses include region, environment, trace ID, HTTP status and the platfo
 The CLI independently packages its input contracts and validates required fields, types, enums, ranges, and declared dependencies. Dynamic model/material combinations, template `input_limit`, time windows, permissions, moderation, and billing are validated by Platform. URL uploads and mask URLs require HTTPS on the default port or 443, with no embedded credentials, fragments, or whitespace; there is no supplier-domain allowlist. Local file uploads remain supported. CLI packaging does not depend on the MCP server; offline tests validate the CLI's packaged input contract.
 
 For CLI development:
+
+All commit messages in this repository must be written in English.
 
 ```bash
 uv venv .venv

@@ -11,12 +11,12 @@ from cli.config import PRODUCTION_URLS, Config
 CUSTOM = "custom_0123456789abcdef0123456789abcdef"
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 def test_create_custom_voice(region, invoke, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
     result, requests = invoke(
         ["--json", "voice", "create", "--name", " 临时测试音色 ", "--audio-media-id", "41"],
         response={"ErrCode": 0, "Resp": {"speaker_id": CUSTOM}},
+        region=region,
     )
     assert result.exit_code == 0 and len(requests) == 1
     assert requests[0].method == "POST"
@@ -26,10 +26,9 @@ def test_create_custom_voice(region, invoke, monkeypatch):
     assert "submission" not in json.loads(result.stdout)
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize("speaker_type", ["system", "custom", "all"])
 def test_new_voice_list(region, speaker_type, invoke, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
     response = {
         "ErrCode": 0,
         "Resp": {
@@ -56,6 +55,7 @@ def test_new_voice_list(region, speaker_type, invoke, monkeypatch):
             "20",
         ],
         response=response,
+        region=region,
     )
     assert result.exit_code == 0 and len(requests) == 1
     assert requests[0].url.path == "/openapi/v2/video/tts_speaker"
@@ -68,12 +68,13 @@ def test_new_voice_list(region, speaker_type, invoke, monkeypatch):
     assert json.loads(result.stdout)["response"]["Resp"]["data"][0]["audio_url"]
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize("resp", [None, {}])
 def test_delete_custom_voice_accepts_documented_empty_response(region, resp, invoke, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
     result, requests = invoke(
-        ["--json", "voice", "delete", "--speaker-id", CUSTOM], response={"ErrCode": 0, "Resp": resp}
+        ["--json", "voice", "delete", "--speaker-id", CUSTOM],
+        response={"ErrCode": 0, "Resp": resp},
+        region=region,
     )
     assert result.exit_code == 0 and len(requests) == 1
     assert requests[0].method == "DELETE"

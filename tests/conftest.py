@@ -9,7 +9,7 @@ from cli.client import PlatformClient
 @pytest.fixture(autouse=True)
 def isolated_credentials(monkeypatch):
     # 测试不加载用户配置；只使用明确的合成值。
-    monkeypatch.setenv("PIXVERSE_REGION", "cn")
+    monkeypatch.delenv("PIXVERSE_REGION", raising=False)
     monkeypatch.setenv("PIXVERSE_API_KEY", "synthetic-test-key")
 
     def forbid_network(*args, **kwargs):
@@ -20,7 +20,10 @@ def isolated_credentials(monkeypatch):
 
 @pytest.fixture
 def invoke(monkeypatch):
-    def run(args, response=None, status=200):
+    def run(args, response=None, status=200, *, region=None):
+        """显式地区转换为真实根选项，未指定时测试 CLI 自身的默认值。"""
+        if region is not None:
+            args = ["--region", region, *args]
         requests = []
 
         def handler(request):

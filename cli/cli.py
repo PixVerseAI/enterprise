@@ -48,7 +48,7 @@ def action(fn):
         options = ctx.find_root().obj
         name = f"{ctx.parent.command.name}_{ctx.command.name.replace('-', '_')}"
         try:
-            config = Config.from_env()
+            config = Config.from_env(region=options["region"])
             result = execute_operation(
                 fn, config, kwargs, name=name, timeout=options["timeout"],
                 client_factory=PlatformClient
@@ -70,6 +70,11 @@ def action(fn):
             raise CommandError(
                 {"type": "validation", "message": message, **failure_context(name)}, options["json"]
             ) from None
+        if result.get("submission") == "accepted":
+            query = result.get("query_command")
+            if not query:
+                query = f"video get --id {result['response']['Resp']['video_id']}"
+            result["query_command"] = f"pixverse-api --region {config.region} --json {query}"
         failed = result.get("task_status") in ("moderation_failed", "failed")
         if options["json"]:
             click.echo(json.dumps({"ok": not failed, **result}, ensure_ascii=False))
@@ -89,7 +94,11 @@ def action(fn):
     return wrapped
 
 
-@click.group(context_settings={"help_option_names": ["-h", "--help"]})
+@click.group(name="pixverse-api", context_settings={"help_option_names": ["-h", "--help"]})
+@click.option(
+    "--region", type=click.Choice(["global", "cn"]), default="global", show_default=True,
+    help="选择生产 API 地区；不读取地区环境变量。",
+)
 @click.option("--json", "json_output", is_flag=True, help="stdout 输出 JSON，失败信息写入 stderr。")
 @click.option(
     "--timeout",
@@ -100,14 +109,14 @@ def action(fn):
 )
 @click.version_option(__version__)
 @click.pass_context
-def cli(ctx, json_output, timeout):
+def cli(ctx, region, json_output, timeout):
     """统一的国内/海外 Platform CLI，仅连接生产 API。
 
-    先设置 PIXVERSE_REGION=cn|ov 和 PIXVERSE_API_KEY。
+    先设置 PIXVERSE_API_KEY；使用 --region 选择地区，默认 global。
     """
     if not math.isfinite(timeout):
         raise click.BadParameter("必须是有限正数。", param_hint="--timeout")
-    ctx.obj = {"json": json_output, "timeout": timeout}
+    ctx.obj = {"region": region, "json": json_output, "timeout": timeout}
 
 
 @cli.group()

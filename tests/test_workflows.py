@@ -5,11 +5,10 @@ import pytest
 from cli.config import PRODUCTION_URLS
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize("keep", [True, False])
 def test_sound_effect_request_and_original_sound(invoke, monkeypatch, region, keep):
     """真实请求构造保留原声开关、零seed和同账号Webhook。"""
-    monkeypatch.setenv("PIXVERSE_REGION", region)
     result, requests = invoke(
         [
             "--json",
@@ -24,7 +23,8 @@ def test_sound_effect_request_and_original_sound(invoke, monkeypatch, region, ke
             "0",
             "--webhook-id",
             "33",
-        ]
+        ],
+        region=region,
     )
     assert result.exit_code == 0, result.output
     assert len(requests) == 1
@@ -41,11 +41,10 @@ def test_sound_effect_request_and_original_sound(invoke, monkeypatch, region, ke
     assert json.loads(result.stdout)["submission"] == "accepted"
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize("last", [{"img_id": 13}, {"img_id": 13, "duration": 0}])
 def test_multi_transition_order_and_last_frame(invoke, monkeypatch, region, last):
     """两地提交保持帧顺序、分段提示词和末帧duration原语义。"""
-    monkeypatch.setenv("PIXVERSE_REGION", region)
     frames = [
         {"img_id": 12, "duration": 3, "prompt": "morning"},
         {"img_id": 11, "duration": 5, "prompt": "night"},
@@ -54,7 +53,7 @@ def test_multi_transition_order_and_last_frame(invoke, monkeypatch, region, last
     args = ["--json", "video", "multi-transition", "--seed", "0", "--webhook-id", "33"]
     for frame in frames:
         args += ["--frame", json.dumps(frame)]
-    result, requests = invoke(args)
+    result, requests = invoke(args, region=region)
     assert result.exit_code == 0, result.output
     assert len(requests) == 1
     assert (
@@ -137,10 +136,9 @@ def test_invalid_sound_effect_stops_before_network(invoke, extra):
     assert result.exit_code == 2 and not requests
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize("command", ["ecommerce-native", "ecommerce-template"])
 def test_ecommerce_named_product_reference(invoke, monkeypatch, region, command):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
     args = [
         "--json",
         "agent",
@@ -156,7 +154,7 @@ def test_ecommerce_named_product_reference(invoke, monkeypatch, region, command)
     ]
     if command == "ecommerce-template":
         args += ["--video-style", "personal_review"]
-    result, requests = invoke(args)
+    result, requests = invoke(args, region=region)
     assert result.exit_code == 0, result.output
     assert json.loads(requests[0].content)["img_references"] == [
         {"img_id": 11, "ref_name": "product"}
@@ -424,11 +422,10 @@ CASES = [
 ]
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize("args,path,payload", CASES, ids=[str(i) for i in range(len(CASES))])
 def test_generation_contract(region, args, path, payload, invoke, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
-    result, requests = invoke(["--json", *args])
+    result, requests = invoke(["--json", *args], region=region)
     assert result.exit_code == 0, result.output
     assert len(requests) == 1
     assert requests[0].method == "POST"
@@ -440,7 +437,7 @@ def test_generation_contract(region, args, path, payload, invoke, monkeypatch):
     assert output["region"] == region
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize(
     "args,method,path",
     [
@@ -454,8 +451,7 @@ def test_generation_contract(region, args, path, payload, invoke, monkeypatch):
     ],
 )
 def test_support_routes(region, args, method, path, invoke, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_REGION", region)
-    result, requests = invoke(["--json", *args], {"ErrCode": 0, "Resp": {}})
+    result, requests = invoke(["--json", *args], {"ErrCode": 0, "Resp": {}}, region=region)
     assert result.exit_code == 0, result.output
     assert len(requests) == 1 and requests[0].method == method
     assert str(requests[0].url) == PRODUCTION_URLS[region] + "/openapi/v2" + path

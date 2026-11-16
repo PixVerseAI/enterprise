@@ -6,7 +6,7 @@ import shutil
 import subprocess
 import sys
 from hashlib import sha256
-from importlib.metadata import version
+from importlib.metadata import distribution, version
 from importlib.resources import files
 from pathlib import Path
 
@@ -68,18 +68,18 @@ def _resolve_cli(name):
 def test_installed_help_without_credentials(args):
     env = {k: v for k, v in os.environ.items() if k not in ("PIXVERSE_REGION", "PIXVERSE_API_KEY")}
     result = subprocess.run(
-        _resolve_cli("pixverse") + args, env=env, capture_output=True, text=True
+        _resolve_cli("pixverse-api") + args, env=env, capture_output=True, text=True
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout and not result.stderr
 
 
-@pytest.mark.parametrize("missing", ["PIXVERSE_REGION", "PIXVERSE_API_KEY"])
+@pytest.mark.parametrize("missing", ["PIXVERSE_API_KEY"])
 def test_missing_configuration_is_json(missing):
     env = dict(os.environ)
     env.pop(missing, None)
     result = subprocess.run(
-        _resolve_cli("pixverse") + ["--json", "account", "balance"],
+        _resolve_cli("pixverse-api") + ["--json", "account", "balance"],
         env=env,
         capture_output=True,
         text=True,
@@ -98,7 +98,7 @@ def test_missing_configuration_is_json(missing):
     ],
 )
 def test_invalid_options_fail_locally_as_json(args):
-    result = subprocess.run(_resolve_cli("pixverse") + args, capture_output=True, text=True)
+    result = subprocess.run(_resolve_cli("pixverse-api") + args, capture_output=True, text=True)
     assert result.returncode == 2 and not result.stdout
     assert json.loads(result.stderr)["error"]["type"] == "validation"
 
@@ -110,7 +110,7 @@ def test_invalid_options_fail_locally_as_json(args):
      "not_applicable"),
 ])
 def test_installed_enum_errors_describe_contract(args, field, allowed, state):
-    result = subprocess.run(_resolve_cli("pixverse") + ["--json", *args],
+    result = subprocess.run(_resolve_cli("pixverse-api") + ["--json", *args],
                             capture_output=True, text=True)
     assert result.returncode == 2 and not result.stdout
     data = json.loads(result.stderr)
@@ -123,15 +123,22 @@ def test_installed_enum_errors_describe_contract(args, field, allowed, state):
 def test_installed_version_matches_distribution():
     """命令版本必须与安装包元数据一致，防止升级后仍显示旧版本。"""
     result = subprocess.run(
-        _resolve_cli("pixverse") + ["--version"], capture_output=True, text=True
+        _resolve_cli("pixverse-api") + ["--version"], capture_output=True, text=True
     )
     assert result.returncode == 0
     assert result.stdout.strip().endswith(version("pixverse-platform-cli"))
 
 
+def test_distribution_registers_only_api_command():
+    """B 端安装包不再注册与 C 端冲突的 pixverse 入口。"""
+    entries = distribution("pixverse-platform-cli").entry_points
+    scripts = {entry.name: entry.value for entry in entries if entry.group == "console_scripts"}
+    assert scripts == {"pixverse-api": "cli.cli:main"}
+
+
 def test_audio_verification_command_is_removed():
     result = subprocess.run(
-        _resolve_cli("pixverse") + ["media", "verify-audio", "--help"],
+        _resolve_cli("pixverse-api") + ["media", "verify-audio", "--help"],
         capture_output=True,
         text=True,
     )
@@ -153,7 +160,9 @@ def test_installed_runtime_and_skill_match_current_source():
 
 def test_packaged_skill_available():
     assert (
-        "PIXVERSE_REGION" in files("cli").joinpath("skills/SKILL.md").read_text()
+        "pixverse-api" in files("cli").joinpath("skills/SKILL.md").read_text()
+        and "--region" in files("cli").joinpath("skills/SKILL.md").read_text()
+        and "PIXVERSE_REGION" not in files("cli").joinpath("skills/SKILL.md").read_text()
     )
 
 
@@ -182,7 +191,9 @@ runpy.run_path(sys.argv[0], run_name='__main__')
             "-c",
             bootstrap,
             json.dumps(response),
-            *_resolve_cli("pixverse"),
+            *_resolve_cli("pixverse-api"),
+            "--region",
+            "cn",
             "--json",
             "video",
             "get",
@@ -197,7 +208,7 @@ runpy.run_path(sys.argv[0], run_name='__main__')
     assert not result.stderr
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize(
     "args,path,field,value",
     [
@@ -320,14 +331,16 @@ runpy.run_path(sys.argv[0], run_name='__main__')
         "field": field,
         "value": value,
     }
-    env = {**os.environ, "PIXVERSE_REGION": region, "PIXVERSE_API_KEY": "synthetic-test-key"}
+    env = {**os.environ, "PIXVERSE_API_KEY": "synthetic-test-key"}
     result = subprocess.run(
         [
             sys.executable,
             "-c",
             bootstrap,
             json.dumps(spec),
-            *_resolve_cli("pixverse"),
+            *_resolve_cli("pixverse-api"),
+            "--region",
+            region,
             "--json",
             *args,
         ],
@@ -339,7 +352,7 @@ runpy.run_path(sys.argv[0], run_name='__main__')
     assert json.loads(result.stdout)["submission"] == "accepted"
 
 
-@pytest.mark.parametrize("region", ["cn", "ov"])
+@pytest.mark.parametrize("region", ["cn", "global"])
 @pytest.mark.parametrize("case", ["usage", "list", "standard", "workflow", "get", "failed"])
 def test_installed_billing_and_templates(region, case):
     """安装入口按完整HTTP序列发现模板、提交或查询，不访问生产网络。"""
@@ -446,11 +459,13 @@ finally:
             "-c",
             bootstrap,
             json.dumps(spec),
-            *_resolve_cli("pixverse"),
+            *_resolve_cli("pixverse-api"),
+            "--region",
+            region,
             "--json",
             *args,
         ],
-        env={**os.environ, "PIXVERSE_REGION": region, "PIXVERSE_API_KEY": "synthetic-test-key"},
+        env={**os.environ, "PIXVERSE_API_KEY": "synthetic-test-key"},
         capture_output=True,
         text=True,
     )

@@ -1,4 +1,4 @@
-"""仅通过显式地区和 API Key 环境变量配置生产请求。"""
+"""通过地区参数和 API Key 环境变量配置生产请求。"""
 
 import os
 from dataclasses import dataclass, field
@@ -7,7 +7,7 @@ from types import MappingProxyType
 PRODUCTION_URLS = MappingProxyType(
     {
         "cn": "https://app-api.pixverseai.cn",
-        "ov": "https://app-api.pixverse.ai",
+        "global": "https://app-api.pixverse.ai",
     }
 )
 
@@ -23,7 +23,7 @@ class Config:
 
     def __post_init__(self):
         if self.region not in PRODUCTION_URLS:
-            raise ConfigurationError("请设置 PIXVERSE_REGION，允许值：cn、ov。")
+            raise ConfigurationError("请使用 --region 指定地区，允许值：global、cn。")
         if not self.api_key or any(ord(c) < 33 or ord(c) > 126 for c in self.api_key):
             raise ConfigurationError("请设置有效的 PIXVERSE_API_KEY（不含空格或控制字符）。")
 
@@ -32,6 +32,6 @@ class Config:
         return PRODUCTION_URLS[self.region]
 
     @classmethod
-    def from_env(cls):
-        # 不加载 .env、不回退个人 Skill 凭据，也不猜测地区。
-        return cls(os.environ.get("PIXVERSE_REGION", ""), os.environ.get("PIXVERSE_API_KEY", ""))
+    def from_env(cls, region="global"):
+        """地区来自命令参数，环境变量只提供 API Key。"""
+        return cls(region, os.environ.get("PIXVERSE_API_KEY", ""))

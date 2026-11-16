@@ -2,7 +2,7 @@
 
 [English](README.md) | 简体中文
 
-PixVerse Enterprise 提供生产 OpenAPI 命令行工具、面向 AI 助手的 Skill 及远程 MCP 接入说明。支持基础生成、视频模板、多帧转场、音效、视频编辑、数字人、电商 Agent、V3 MV 及 Key 级用量明细。CLI 入口为 `pixverse`，需要 Python 3.10+。
+PixVerse Enterprise 提供生产 OpenAPI 命令行工具、面向 AI 助手的 Skill 及远程 MCP 接入说明。支持基础生成、视频模板、多帧转场、音效、视频编辑、数字人、电商 Agent、V3 MV 及 Key 级用量明细。CLI 入口为 `pixverse-api`，需要 Python 3.10+。
 
 可用能力、模型和参数以开放平台文档及账号权限为准。
 
@@ -17,10 +17,12 @@ PixVerse Enterprise 提供生产 OpenAPI 命令行工具、面向 AI 助手的 S
 
 ```bash
 pipx install .
-pixverse --help
+pixverse-api --region cn --help
 ```
 
 开发安装与验证：
+
+本仓库的所有 Git 提交信息必须使用英文。
 
 ```bash
 uv venv .venv
@@ -32,7 +34,7 @@ PATH="$PWD/.venv/bin:$PATH" PIXVERSE_FORCE_INSTALLED=1 .venv/bin/python -m pytes
 
 ## 配置
 
-CLI 必须通过进程环境提供 `PIXVERSE_REGION=cn` 和 `PIXVERSE_API_KEY`（自己的生产 API Key）。请用终端环境或凭据管理器注入 Key，不在命令参数、聊天或源码中填写。CLI 不读取 `.env`、个人 Skill 认证配置或配置文件，不写入 Key。
+CLI 通过根选项 `--region cn` 选择本页的生产 API；省略 `--region` 时默认 `global`，不再读取地区环境变量。进程环境只需提供 `PIXVERSE_API_KEY`（自己的生产 API Key）。请用终端环境或凭据管理器注入 Key，不在命令参数、聊天或源码中填写。CLI 不读取 `.env`、个人 Skill 认证配置或配置文件，不写入 Key。
 
 生产 API 地址固定为 `https://app-api.pixverseai.cn`。
 
@@ -86,25 +88,25 @@ Avatar 支持 `360p`、`540p`、`720p`、`1080p`，可选 prompt 上限2048字�
 
 ```bash
 # 查询余额
-pixverse account balance
-pixverse --json account balance
+pixverse-api --region cn account balance
+pixverse-api --region cn --json account balance
 
 # 图片上传；--file 与 --url 二选一
-pixverse image upload --file /absolute/path/image.png
-pixverse image upload --url https://example.com/image.png
+pixverse-api --region cn image upload --file /absolute/path/image.png
+pixverse-api --region cn image upload --url https://example.com/image.png
 
 # 视频/音频上传
-pixverse media upload --file /absolute/path/video.mp4
-pixverse media upload --url https://example.com/audio.wav
+pixverse-api --region cn media upload --file /absolute/path/video.mp4
+pixverse-api --region cn media upload --url https://example.com/audio.wav
 
 # 文生视频（默认 v6、5 秒、720p、16:9）
-pixverse video generate --prompt "一只猫走过草地" --no-audio
+pixverse-api --region cn video generate --prompt "一只猫走过草地" --no-audio
 
 # 图生视频；将下面示例 ID 替换成同地区、同账号上传返回的 img_id
-pixverse video from-image --img-id 123456 --prompt "让主体缓慢向前走" --no-audio
+pixverse-api --region cn video from-image --img-id 123456 --prompt "让主体缓慢向前走" --no-audio
 
 # 单次查询；将示例 ID 替换成创建响应中的 video_id
-pixverse --json video get --id 123456
+pixverse-api --region cn --json video get --id 123456
 ```
 
 基础 T2V/I2V 命令支持 `--model`、`--duration`、`--quality`、`--seed`、`--audio/--no-audio`、`--multi-clip/--no-multi-clip`、`--webhook-id`和`--negative-prompt`；文生视频另外支持 `--aspect-ratio`。音频、多镜头选项省略时不发送该字段，使用服务端默认。模型、权益和参数组合由服务端作最终校验；不提供任意请求JSON透传。
@@ -116,9 +118,9 @@ pixverse --json video get --id 123456
 `account usage`查询当前API Key的消耗/返还记录，不把创建响应中的报价当成最终流水。首次查询必填开始、结束时间，默认50条、最多100条，时间范围左闭右开且最多30天。时间格式为`YYYY-MM-DD HH:MM:SS`，按UTC+8解释；可重复传`--creation-type`和`--credits-status consume|refund`。只查询一页；续页原样传`next_cursor`，不能混用其他条件。游标绑定原Key与API入口。
 
 ```bash
-pixverse --json account usage --start-time '2026-11-01 00:00:00' --end-time '2026-11-02 00:00:00' \
+pixverse-api --region cn --json account usage --start-time '2026-11-01 00:00:00' --end-time '2026-11-02 00:00:00' \
   --creation-type text_to_video --credits-status consume --credits-status refund --limit 20
-pixverse --json account usage --cursor '替换为上一页next_cursor'
+pixverse-api --region cn --json account usage --cursor '替换为上一页next_cursor'
 ```
 
 `template list`固定查询视频模板（type=1），支持重复`--template-id`、`--mode standard|workflow`、页码及10/20/50/100条分页，保留输入、时长、清晰度、价格和输出元数据。可用模板以实际列表响应为准。`template generate`每次先精确读取所选模板元数据，再单次提交，不绕过模板和账号权限。
@@ -126,11 +128,11 @@ pixverse --json account usage --cursor '替换为上一页next_cursor'
 传统模板必须显式指定`--model`、`--duration`、`--quality`，按模板配置选择组合；单图传一次`--img-id`，多图按顺序重复传入。无图片的单图类模板使用文生入口并须给prompt，可选aspect-ratio。具体图数由服务端最终校验。Workflow模板只接受重复`--input`具名JSON对象，input_key从列表复制，每项仅提供text/img_id/video_media_id/source_video_id/audio_media_id中的一种；文字省略时采用模板默认。仅生成纯视频输出，图片和混合输出模板不接入。
 
 ```bash
-pixverse --json template list --mode standard --page 1 --page-size 20
-pixverse --json template list --template-id 123
-pixverse --json template generate --id 123 --img-id 11 --model v5.6 --duration 5 --quality 720p
-pixverse --json template generate --id 124 --img-id 11 --img-id 12 --model v5.6 --duration 5 --quality 720p
-pixverse --json template generate --id 125 \
+pixverse-api --region cn --json template list --mode standard --page 1 --page-size 20
+pixverse-api --region cn --json template list --template-id 123
+pixverse-api --region cn --json template generate --id 123 --img-id 11 --model v5.6 --duration 5 --quality 720p
+pixverse-api --region cn --json template generate --id 124 --img-id 11 --img-id 12 --model v5.6 --duration 5 --quality 720p
+pixverse-api --region cn --json template generate --id 125 \
   --input '{"input_key":"替换为图片节点key","img_id":11}' \
   --input '{"input_key":"替换为文字节点key","text":"商品展示"}'
 ```
@@ -138,9 +140,9 @@ pixverse --json template generate --id 125 \
 传统模板响应是`video_id`，沿用`video get --id`；Workflow响应是独立`task_id`，使用`template get --id`。后者保留`Resp.contents`并仅从成功视频输出汇总`output_urls`；只有一条时额外提供`output_url`，不会把中间产物当成成片。统一退出码、未验证URL标记、不自动轮询/重试/下载规则同样适用。
 
 ```bash
-pixverse --json video get --id 123456
-pixverse --json template get --id 234567
-pixverse video generate --prompt '商品转台展示' --webhook-id 123 --negative-prompt 'blur'
+pixverse-api --region cn --json video get --id 123456
+pixverse-api --region cn --json template get --id 234567
+pixverse-api --region cn video generate --prompt '商品转台展示' --webhook-id 123 --negative-prompt 'blur'
 ```
 
 ## 视频扩展、音效与编辑
@@ -167,22 +169,22 @@ pixverse video generate --prompt '商品转台展示' --webhook-id 123 --negativ
 “视频来源”必须且只能提供 `--source-video-id`（平台已生成视频）或 `--video-media-id`（上传视频）。生成命令沿用统一 `video get --id` 查询。Mask同步返回结果，不能当作视频创建任务查询；CLI不会自动选区。
 
 ```bash
-pixverse video f2v --first-frame-img 11 --last-frame-img 12 --prompt "从清晨过渡到黄昏"
-pixverse video fusion --img-id 11 --img-id 12 --prompt "两个主体自然互动"
-pixverse video fusion --reference-mode omni --video-ref '{"video_media_id":22}' --prompt "参考动作和运镜"
-pixverse video extend --source-video-id 21 --prompt "继续向前移动" --duration 5
-pixverse video expand --video-media-id 22 --aspect-ratio 9:16 --quality 720p
-pixverse video upscale --source-video-id 21
-pixverse video restyle --video-media-id 22 --restyle-prompt "柔和水彩风格"
-pixverse video lipsync --video-media-id 22 --audio-media-id 41
-pixverse video avatar --img-id 11 --tts-speaker-id Auto --tts-content "欢迎使用开放平台"
-pixverse video mimic --img-id 11 --video-media-id 22 --post-reference video
-pixverse --json video mask --video-media-id 22 --keyframe-id 0
+pixverse-api --region cn video f2v --first-frame-img 11 --last-frame-img 12 --prompt "从清晨过渡到黄昏"
+pixverse-api --region cn video fusion --img-id 11 --img-id 12 --prompt "两个主体自然互动"
+pixverse-api --region cn video fusion --reference-mode omni --video-ref '{"video_media_id":22}' --prompt "参考动作和运镜"
+pixverse-api --region cn video extend --source-video-id 21 --prompt "继续向前移动" --duration 5
+pixverse-api --region cn video expand --video-media-id 22 --aspect-ratio 9:16 --quality 720p
+pixverse-api --region cn video upscale --source-video-id 21
+pixverse-api --region cn video restyle --video-media-id 22 --restyle-prompt "柔和水彩风格"
+pixverse-api --region cn video lipsync --video-media-id 22 --audio-media-id 41
+pixverse-api --region cn video avatar --img-id 11 --tts-speaker-id Auto --tts-content "欢迎使用开放平台"
+pixverse-api --region cn video mimic --img-id 11 --video-media-id 22 --post-reference video
+pixverse-api --region cn --json video mask --video-media-id 22 --keyframe-id 0
 # 将关键帧和mask-id换为上一条Mask响应，保持视频来源一致；"0"是合法字符串ID
-pixverse video swap --video-media-id 22 --keyframe-id 0 --mask-id 0 --img-id 12
-pixverse video modify --video-media-id 22 --prompt "将主体替换为参考图" --img-id 12 --mask-id 0 --keyframe-id 0
-pixverse voice list
-pixverse video restyle-list
+pixverse-api --region cn video swap --video-media-id 22 --keyframe-id 0 --mask-id 0 --img-id 12
+pixverse-api --region cn video modify --video-media-id 22 --prompt "将主体替换为参考图" --img-id 12 --mask-id 0 --keyframe-id 0
+pixverse-api --region cn voice list
+pixverse-api --region cn video restyle-list
 ```
 
 Fusion 的 `--image-ref` 接受单个JSON对象，可重复传入，字段为 `img_id`、可选 `type/ref_name`；`--video-ref`每项只提供一种视频来源及可选`ref_name`。支持V6 Omni和`--aspect-ratio auto`。图片模式显式填写正秒，Omni视频模式显式填写0；省略duration时不注入值，显式值原样保留。模型/素材组合、引用数量及名称有效性由Platform校验。
@@ -190,8 +192,8 @@ Fusion 的 `--image-ref` 接受单个JSON对象，可重复传入，字段为 `i
 SoundEffect给已有视频生成音效，视频来源二选一；省略内容时由服务端自动生成，不需要模型或清晰度参数。MultiTransition接受至少两个`--frame`对象（img_id、可选prompt、duration）；每段duration属于起始帧，末帧省略duration或设0。帧数上限、分段/总时长及模型组合由Platform校验，CLI不改写。例如：
 
 ```bash
-pixverse --json video sound-effect --video-media-id 123 --sound-effect-content 'gentle rain' --no-original-sound
-pixverse --json video multi-transition --model v5 --quality 720p \
+pixverse-api --region cn --json video sound-effect --video-media-id 123 --sound-effect-content 'gentle rain' --no-original-sound
+pixverse-api --region cn --json video multi-transition --model v5 --quality 720p \
   --frame '{"img_id":11,"duration":5,"prompt":"sunset"}' \
   --frame '{"img_id":12,"duration":5,"prompt":"night"}' \
   --frame '{"img_id":13}'
@@ -215,16 +217,16 @@ MV当前仅暴露V3 Custom，不提供Beat Mix、Visual Riff或任意mv_agent_ty
 支持重复`--image-ref '{"img_id":11,"ref_name":"product"}'`，保留商品图片引用名称；与`--img-id`二选一，引用只支持`img_id/ref_name`，图片数量和avatar有效性由Platform校验。音色ID通过`voice list`查询，使用当前API入口实际返回的ID。
 
 ```bash
-pixverse agent ecommerce-native --img-id 11 --prompt "展示商品特点" --duration 15 --language-code zh-CN
-pixverse agent ecommerce-template --img-id 11 --prompt "展示商品特点" --duration 15 --language-code zh-CN --video-style polished_commercials
-pixverse agent ecommerce-native --image-ref '{"img_id":11,"ref_name":"product"}' --prompt "展示商品特点" --duration 15 --language-code en-US
+pixverse-api --region cn agent ecommerce-native --img-id 11 --prompt "展示商品特点" --duration 15 --language-code zh-CN
+pixverse-api --region cn agent ecommerce-template --img-id 11 --prompt "展示商品特点" --duration 15 --language-code zh-CN --video-style polished_commercials
+pixverse-api --region cn agent ecommerce-native --image-ref '{"img_id":11,"ref_name":"product"}' --prompt "展示商品特点" --duration 15 --language-code en-US
 ```
 
 `agent mv` 固定采用 `mv_agent_type=vibe_mv_v3_custom`。上传音频后直接提交 MV，音频由服务端异步校验；该行为依赖目标地域的后端完成部署，受理成功不代表审核或生成成功。
 
 ```bash
-pixverse agent mv --audio-media-id 41 --img-id 11 --mv-style "Gothic Halloween" --preserve-outfit --caption --lip-sync
-pixverse agent mv --audio-media-id 41 --img-id 11 --style-img-id 12 --mv-style Custom --lyric-timestamp-file /absolute/path/lyrics.json
+pixverse-api --region cn agent mv --audio-media-id 41 --img-id 11 --mv-style "Gothic Halloween" --preserve-outfit --caption --lip-sync
+pixverse-api --region cn agent mv --audio-media-id 41 --img-id 11 --style-img-id 12 --mv-style Custom --lyric-timestamp-file /absolute/path/lyrics.json
 ```
 
 角色图和风格图各最多1张；风格图仅用于Custom，Custom至少有一种图片参考。可用`--mv-prompt`、`--music-style`、`--lyric-text`、`--caption`、`--lip-sync`、`--preserve-outfit`及对应`--no-*`选项，显式false会保留。MV风格、音乐风格交给服务端模板校验，不把旧文档枚举写死。音频长度、权限、审核及风格是否在线由服务端判断。
@@ -236,18 +238,18 @@ pixverse agent mv --audio-media-id 41 --img-id 11 --style-img-id 12 --mv-style C
 上传不超过30秒的语音样本后，用`voice create`创建当前账号的自定义音色。列表支持`--type system|custom|all`、`--scene avatar|lip_sync`和10/20/50/100条分页，返回音色类型及服务端提供的试听地址；不传type时默认all，每页20条，全部走新版接口。音色ID只在原账号、原地域使用，创建数量、会员及样本限制由服务端校验。
 
 ```bash
-pixverse media upload --file /absolute/path/voice-sample.wav
-pixverse voice create --name '品牌音色' --audio-media-id 41
-pixverse --json voice list --type custom --scene avatar --page-size 20
-pixverse video avatar --img-id 11 --tts-speaker-id custom_返回的ID --tts-content '欢迎使用我们的平台'
-pixverse voice delete --speaker-id custom_返回的ID
+pixverse-api --region cn media upload --file /absolute/path/voice-sample.wav
+pixverse-api --region cn voice create --name '品牌音色' --audio-media-id 41
+pixverse-api --region cn --json voice list --type custom --scene avatar --page-size 20
+pixverse-api --region cn video avatar --img-id 11 --tts-speaker-id custom_返回的ID --tts-content '欢迎使用我们的平台'
+pixverse-api --region cn voice delete --speaker-id custom_返回的ID
 ```
 
 create同步返回speaker_id，不作为视频生成任务查询；delete只接受custom_标识，兼容后端成功Resp=null/{}，不自动重试。删除只影响指定的自定义音色，使用前核对ID。
 
 ## CLI 输出与自动化
 
-全局选项放在子命令之前：`pixverse --json --timeout 60 account balance`。
+全局选项放在子命令之前：`pixverse-api --region cn --json --timeout 60 account balance`。
 
 成功 JSON 包含 `ok`、`region`、`environment`、`trace_id`、`http_status` 和原始协议结构 `response`。敏感字段递归脱敏。每次请求自动生成新的 UUID v4 `Ai-trace-id`；HTTP 状态与业务 `ErrCode` 同时检查，服务端 `Error` 详情保留在 `response` 中，并优先展示公开的错误说明。
 
