@@ -1,0 +1,3495 @@
+{
+  "account_balance": {
+    "type": "object",
+    "properties": {},
+    "required": [],
+    "additionalProperties": false
+  },
+  "account_usage": {
+    "type": "object",
+    "properties": {
+      "start_time": {
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "pixverse-date-time",
+            "description": "YYYY-MM-DD HH:MM:SS；按连接接口的时区解释，开始早于结束且最多30天，由Platform最终校验。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "end_time": {
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "pixverse-date-time",
+            "description": "YYYY-MM-DD HH:MM:SS；按连接接口的时区解释，开始早于结束且最多30天，由Platform最终校验。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "creation_types": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "default": []
+      },
+      "credits_statuses": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "consume",
+            "refund"
+          ]
+        },
+        "default": []
+      },
+      "limit": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "cursor": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "oneOf": [
+          {
+            "required": [
+              "cursor"
+            ],
+            "properties": {
+              "cursor": {
+                "type": "string",
+                "minLength": 1
+              },
+              "start_time": {
+                "type": "null"
+              },
+              "end_time": {
+                "type": "null"
+              },
+              "creation_types": {
+                "type": "null"
+              },
+              "credits_statuses": {
+                "type": "null"
+              },
+              "limit": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "start_time",
+              "end_time"
+            ],
+            "properties": {
+              "cursor": {
+                "enum": [
+                  null,
+                  ""
+                ]
+              },
+              "start_time": {
+                "type": "string"
+              },
+              "end_time": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "cursor",
+          "start_time",
+          "end_time",
+          "creation_types",
+          "credits_statuses",
+          "limit"
+        ],
+        "x-error-message": "首次查询必须提供start_time和end_time；续页只传cursor，不能混用时间、筛选或limit。"
+      }
+    ]
+  },
+  "agent_ecommerce_native": {
+    "type": "object",
+    "properties": {
+      "img_ids": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "default": []
+      },
+      "image_references": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "img_id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 18446744073709551615
+            },
+            "ref_name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "img_id"
+          ],
+          "additionalProperties": false
+        },
+        "default": []
+      },
+      "prompt": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S",
+        "maxLength": 5000
+      },
+      "duration": {
+        "type": "integer",
+        "enum": [
+          15,
+          30,
+          45,
+          60
+        ],
+        "description": "单位：秒；模型、引用类型及账号的有效时长范围由Platform判定，不改写显式传入值。"
+      },
+      "language_code": {
+        "type": "string",
+        "enum": [
+          "en-AU",
+          "pt-BR",
+          "es-BR",
+          "en-CA",
+          "fr-CA",
+          "zh-CN",
+          "es-CO",
+          "fr-FR",
+          "de-DE",
+          "hi-IN",
+          "en-IN",
+          "id-ID",
+          "it-IT",
+          "ja-JP",
+          "ms-MY",
+          "es-MX",
+          "nl-NL",
+          "en-NL",
+          "fil-PH",
+          "en-PH",
+          "pl-PL",
+          "ru-RU",
+          "en-SG",
+          "ko-KR",
+          "es-ES",
+          "de-CH",
+          "fr-CH",
+          "it-CH",
+          "zh-TW",
+          "th-TH",
+          "en-TH",
+          "tr-TR",
+          "ar-AE",
+          "en-AE",
+          "en-GB",
+          "en-US",
+          "es-US",
+          "vi-VN"
+        ]
+      },
+      "quality": {
+        "type": "string",
+        "enum": [
+          "720p",
+          "1080p"
+        ],
+        "default": "720p",
+        "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "enum": [
+          "16:9",
+          "9:16",
+          "4:3",
+          "3:4",
+          "1:1",
+          "21:9"
+        ],
+        "default": "9:16"
+      },
+      "avatar": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "lip_sync": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "bgm": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "caption": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "prompt",
+      "duration",
+      "language_code"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "not": {
+          "required": [
+            "img_ids",
+            "image_references"
+          ],
+          "properties": {
+            "img_ids": {
+              "minItems": 1
+            },
+            "image_references": {
+              "minItems": 1
+            }
+          }
+        },
+        "x-error-fields": [
+          "img_ids",
+          "image_references"
+        ],
+        "x-error-message": "img_ids与image_references是同一类引用的两种写法，请选择一种。"
+      },
+      {
+        "anyOf": [
+          {
+            "required": [
+              "img_ids"
+            ],
+            "properties": {
+              "img_ids": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "image_references"
+            ],
+            "properties": {
+              "image_references": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "img_ids",
+          "image_references"
+        ],
+        "x-error-message": "请提供至少一种非空素材引用。"
+      }
+    ]
+  },
+  "agent_ecommerce_template": {
+    "type": "object",
+    "properties": {
+      "img_ids": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "default": []
+      },
+      "image_references": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "img_id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 18446744073709551615
+            },
+            "ref_name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "img_id"
+          ],
+          "additionalProperties": false
+        },
+        "default": []
+      },
+      "prompt": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S",
+        "maxLength": 5000
+      },
+      "duration": {
+        "type": "integer",
+        "enum": [
+          15,
+          30,
+          45,
+          60
+        ],
+        "description": "单位：秒；模型、引用类型及账号的有效时长范围由Platform判定，不改写显式传入值。"
+      },
+      "language_code": {
+        "type": "string",
+        "enum": [
+          "en-AU",
+          "pt-BR",
+          "es-BR",
+          "en-CA",
+          "fr-CA",
+          "zh-CN",
+          "es-CO",
+          "fr-FR",
+          "de-DE",
+          "hi-IN",
+          "en-IN",
+          "id-ID",
+          "it-IT",
+          "ja-JP",
+          "ms-MY",
+          "es-MX",
+          "nl-NL",
+          "en-NL",
+          "fil-PH",
+          "en-PH",
+          "pl-PL",
+          "ru-RU",
+          "en-SG",
+          "ko-KR",
+          "es-ES",
+          "de-CH",
+          "fr-CH",
+          "it-CH",
+          "zh-TW",
+          "th-TH",
+          "en-TH",
+          "tr-TR",
+          "ar-AE",
+          "en-AE",
+          "en-GB",
+          "en-US",
+          "es-US",
+          "vi-VN"
+        ]
+      },
+      "quality": {
+        "type": "string",
+        "enum": [
+          "720p",
+          "1080p"
+        ],
+        "default": "720p",
+        "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "enum": [
+          "16:9",
+          "9:16",
+          "4:3",
+          "3:4",
+          "1:1",
+          "21:9"
+        ],
+        "default": "9:16"
+      },
+      "avatar": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "lip_sync": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "bgm": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "caption": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "video_style": {
+        "type": "string",
+        "enum": [
+          "polished_commercials",
+          "personal_review",
+          "no_personal_review"
+        ]
+      }
+    },
+    "required": [
+      "prompt",
+      "duration",
+      "language_code",
+      "video_style"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "not": {
+          "required": [
+            "img_ids",
+            "image_references"
+          ],
+          "properties": {
+            "img_ids": {
+              "minItems": 1
+            },
+            "image_references": {
+              "minItems": 1
+            }
+          }
+        },
+        "x-error-fields": [
+          "img_ids",
+          "image_references"
+        ],
+        "x-error-message": "img_ids与image_references是同一类引用的两种写法，请选择一种。"
+      },
+      {
+        "anyOf": [
+          {
+            "required": [
+              "img_ids"
+            ],
+            "properties": {
+              "img_ids": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "image_references"
+            ],
+            "properties": {
+              "image_references": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "img_ids",
+          "image_references"
+        ],
+        "x-error-message": "请提供至少一种非空素材引用。"
+      }
+    ]
+  },
+  "agent_mv": {
+    "type": "object",
+    "properties": {
+      "audio_media_id": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 18446744073709551615
+      },
+      "img_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "style_img_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "quality": {
+        "type": "string",
+        "enum": [
+          "720p",
+          "1080p"
+        ],
+        "default": "720p",
+        "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "enum": [
+          "16:9",
+          "9:16",
+          "4:3",
+          "3:4",
+          "1:1"
+        ],
+        "default": "16:9"
+      },
+      "mv_style": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "music_style": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "mv_prompt": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "lyric_text": {
+        "anyOf": [
+          {
+            "type": "string",
+            "maxLength": 5000
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "lyric_timestamp": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "words": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "end": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "word": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end",
+                    "word"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "words"
+            ],
+            "additionalProperties": false,
+            "description": "逐词时间戳，start/end单位秒、非负；要求end>=start且后一词start>=前一词end。顺序、字数及真实音频时长匹配由Platform校验。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "caption": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "lip_sync": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "preserve_outfit": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "seed": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "可选整数随机种子；不隐式替换已提供值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "audio_media_id"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "if": {
+          "required": [
+            "mv_style"
+          ],
+          "properties": {
+            "mv_style": {
+              "type": "string",
+              "pattern": "^\\s*[Cc][Uu][Ss][Tt][Oo][Mm]\\s*$"
+            }
+          }
+        },
+        "then": {
+          "anyOf": [
+            {
+              "required": [
+                "img_id"
+              ],
+              "properties": {
+                "img_id": {
+                  "not": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "required": [
+                "style_img_id"
+              ],
+              "properties": {
+                "style_img_id": {
+                  "not": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ],
+          "x-error-fields": [
+            "img_id",
+            "style_img_id"
+          ],
+          "x-error-message": "Custom风格至少提供img_id或style_img_id。"
+        }
+      },
+      {
+        "if": {
+          "required": [
+            "style_img_id"
+          ],
+          "properties": {
+            "style_img_id": {
+              "not": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        "then": {
+          "required": [
+            "mv_style"
+          ],
+          "properties": {
+            "mv_style": {
+              "type": "string",
+              "pattern": "^\\s*[Cc][Uu][Ss][Tt][Oo][Mm]\\s*$"
+            }
+          }
+        },
+        "description": "style_img_id仅用于Custom风格。"
+      }
+    ]
+  },
+  "image_upload": {
+    "type": "object",
+    "properties": {
+      "url": {
+        "type": "string",
+        "minLength": 1,
+        "format": "pixverse-https-url",
+        "description": "HTTPS URL，必须含域名，无内嵌凭据或片段，端口为默认或443；不限制素材供应商域名。MCP不读取本地文件，素材实际抓取和校验由Platform完成。"
+      }
+    },
+    "required": [
+      "url"
+    ],
+    "additionalProperties": false
+  },
+  "media_upload": {
+    "type": "object",
+    "properties": {
+      "url": {
+        "type": "string",
+        "minLength": 1,
+        "format": "pixverse-https-url",
+        "description": "HTTPS URL，必须含域名，无内嵌凭据或片段，端口为默认或443；不限制素材供应商域名。MCP不读取本地文件，素材实际抓取和校验由Platform完成。"
+      }
+    },
+    "required": [
+      "url"
+    ],
+    "additionalProperties": false
+  },
+  "template_generate": {
+    "type": "object",
+    "properties": {
+      "template_id": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 18446744073709551615
+      },
+      "img_ids": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "default": []
+      },
+      "inputs": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "input_key": {
+              "type": "string",
+              "minLength": 1
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1
+            },
+            "img_id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 18446744073709551615
+            },
+            "video_media_id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 18446744073709551615
+            },
+            "source_video_id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 18446744073709551615
+            },
+            "audio_media_id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 18446744073709551615
+            }
+          },
+          "required": [
+            "input_key"
+          ],
+          "additionalProperties": false,
+          "oneOf": [
+            {
+              "required": [
+                "text"
+              ]
+            },
+            {
+              "required": [
+                "img_id"
+              ]
+            },
+            {
+              "required": [
+                "video_media_id"
+              ]
+            },
+            {
+              "required": [
+                "source_video_id"
+              ]
+            },
+            {
+              "required": [
+                "audio_media_id"
+              ]
+            }
+          ]
+        },
+        "default": []
+      },
+      "model": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "duration": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "description": "单位：秒；模型、引用类型及账号的有效时长范围由Platform判定，不改写显式传入值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "quality": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "360p",
+              "540p",
+              "720p",
+              "1080p"
+            ],
+            "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "prompt": {
+        "anyOf": [
+          {
+            "type": "string",
+            "maxLength": 5000
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "negative_prompt": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "aspect_ratio": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16",
+              "4:3",
+              "3:4",
+              "1:1",
+              "2:3",
+              "3:2",
+              "21:9"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "seed": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "可选整数随机种子；不隐式替换已提供值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "audio": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "template_id"
+    ],
+    "additionalProperties": false,
+    "description": "先读取元数据确定standard/workflow路由；当前仅支持纯视频输出。传统模板要求model/duration/quality，文字入口需prompt；Workflow通过inputs提交，不与传统字段混用。模板动态输入数量/类型、权限和能力由Platform校验。"
+  },
+  "template_get": {
+    "type": "object",
+    "properties": {
+      "task_id": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 18446744073709551615
+      }
+    },
+    "required": [
+      "task_id"
+    ],
+    "additionalProperties": false
+  },
+  "template_list": {
+    "type": "object",
+    "properties": {
+      "template_ids": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "default": []
+      },
+      "mode": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "standard",
+              "workflow"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "page": {
+        "type": "integer",
+        "minimum": 1,
+        "default": 1
+      },
+      "page_size": {
+        "type": "integer",
+        "enum": [
+          10,
+          20,
+          50,
+          100
+        ],
+        "default": 50
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  },
+  "video_avatar": {
+    "type": "object",
+    "properties": {
+      "img_id": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 18446744073709551615
+      },
+      "audio_media_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "tts_speaker_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "maxLength": 2048
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "tts_content": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Avatar TTS为30–200个Unicode码点；最小长度按去除首尾空白后检查，最大长度包含首尾空白。实际音色资格及文本校验由Platform执行。"
+      },
+      "quality": {
+        "type": "string",
+        "enum": [
+          "360p",
+          "540p",
+          "720p",
+          "1080p"
+        ],
+        "default": "720p",
+        "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+      },
+      "prompt": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "maxLength": 2048
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "img_id"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "oneOf": [
+          {
+            "required": [
+              "audio_media_id"
+            ],
+            "properties": {
+              "audio_media_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "tts_speaker_id": {
+                "type": "null"
+              },
+              "tts_content": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "tts_speaker_id",
+              "tts_content"
+            ],
+            "properties": {
+              "audio_media_id": {
+                "type": "null"
+              },
+              "tts_speaker_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "tts_content": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "audio_media_id",
+          "tts_speaker_id",
+          "tts_content"
+        ],
+        "x-error-message": "请选择audio_media_id，或同时提供tts_speaker_id与tts_content；两种输入不能混用。"
+      }
+    ]
+  },
+  "video_expand": {
+    "type": "object",
+    "properties": {
+      "source_video_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "video_media_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "aspect_ratio": {
+        "type": "string"
+      },
+      "quality": {
+        "type": "string",
+        "enum": [
+          "720p",
+          "1080p"
+        ],
+        "default": "720p",
+        "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+      }
+    },
+    "required": [
+      "aspect_ratio"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "oneOf": [
+          {
+            "required": [
+              "source_video_id"
+            ],
+            "properties": {
+              "source_video_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "video_media_id": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "video_media_id"
+            ],
+            "properties": {
+              "video_media_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source_video_id": {
+                "type": "null"
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "source_video_id",
+          "video_media_id"
+        ],
+        "x-error-message": "source_video_id 与 video_media_id 必须二选一。"
+      }
+    ]
+  },
+  "video_extend": {
+    "type": "object",
+    "properties": {
+      "prompt": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S",
+        "maxLength": 5000
+      },
+      "model": {
+        "type": "string",
+        "default": "v6"
+      },
+      "duration": {
+        "type": "integer",
+        "minimum": 1,
+        "default": 5,
+        "description": "单位：秒；模型、引用类型及账号的有效时长范围由Platform判定，不改写显式传入值。"
+      },
+      "quality": {
+        "type": "string",
+        "enum": [
+          "360p",
+          "540p",
+          "720p",
+          "1080p"
+        ],
+        "default": "720p",
+        "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+      },
+      "seed": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "可选整数随机种子；不隐式替换已提供值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "negative_prompt": {
+        "anyOf": [
+          {
+            "type": "string",
+            "maxLength": 2048
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "audio": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "source_video_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "video_media_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "prompt"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "oneOf": [
+          {
+            "required": [
+              "source_video_id"
+            ],
+            "properties": {
+              "source_video_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "video_media_id": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "video_media_id"
+            ],
+            "properties": {
+              "video_media_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source_video_id": {
+                "type": "null"
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "source_video_id",
+          "video_media_id"
+        ],
+        "x-error-message": "source_video_id 与 video_media_id 必须二选一。"
+      }
+    ],
+    "description": "保留本工具字段、默认值和清晰度枚举；模型、时长、引用数量等动态组合由Platform判定。"
+  },
+  "video_f2v": {
+    "type": "object",
+    "properties": {
+      "prompt": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S",
+        "maxLength": 5000
+      },
+      "model": {
+        "type": "string",
+        "default": "v6"
+      },
+      "duration": {
+        "type": "integer",
+        "minimum": 1,
+        "default": 5,
+        "description": "单位：秒；模型、引用类型及账号的有效时长范围由Platform判定，不改写显式传入值。"
+      },
+      "quality": {
+        "type": "string",
+        "enum": [
+          "360p",
+          "540p",
+          "720p",
+          "1080p"
+        ],
+        "default": "720p",
+        "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+      },
+      "seed": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "可选整数随机种子；不隐式替换已提供值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "negative_prompt": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "audio": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "first_frame_img": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 18446744073709551615
+      },
+      "last_frame_img": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 18446744073709551615
+      }
+    },
+    "required": [
+      "prompt",
+      "first_frame_img",
+      "last_frame_img"
+    ],
+    "additionalProperties": false,
+    "description": "保留本工具字段、默认值和清晰度枚举；模型、时长、引用数量等动态组合由Platform判定。"
+  },
+  "video_from_image": {
+    "type": "object",
+    "properties": {
+      "multi_clip": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "audio": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "negative_prompt": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "seed": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "可选整数随机种子；不隐式替换已提供值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "quality": {
+        "type": "string",
+        "enum": [
+          "360p",
+          "540p",
+          "720p",
+          "1080p"
+        ],
+        "default": "720p",
+        "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+      },
+      "duration": {
+        "type": "integer",
+        "minimum": 1,
+        "default": 5,
+        "description": "单位：秒；模型、引用类型及账号的有效时长范围由Platform判定，不改写显式传入值。"
+      },
+      "model": {
+        "type": "string",
+        "default": "v6"
+      },
+      "prompt": {
+        "anyOf": [
+          {
+            "type": "string",
+            "maxLength": 5000
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "可选提示词，最多5000个字符；缺省或空值对应的模型行为由Platform判断。"
+      },
+      "img_id": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+    "required": [
+      "img_id"
+    ],
+    "additionalProperties": false,
+    "description": "保留本工具字段、默认值和清晰度枚举；模型、时长、引用数量等动态组合由Platform判定。"
+  },
+  "video_fusion": {
+    "type": "object",
+    "properties": {
+      "prompt": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S",
+        "maxLength": 5000
+      },
+      "model": {
+        "type": "string",
+        "default": "v6"
+      },
+      "quality": {
+        "type": "string",
+        "enum": [
+          "360p",
+          "540p",
+          "720p",
+          "1080p"
+        ],
+        "default": "720p",
+        "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+      },
+      "seed": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "可选整数随机种子；不隐式替换已提供值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "negative_prompt": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "audio": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "duration": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "description": "单位：秒；模型、引用类型及账号的有效时长范围由Platform判定，不改写显式传入值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "单位秒；省略或null时不注入时长；图片模式显式填正秒，Omni视频引用显式填0。不改写用户显式值，实际有效范围由Platform判断。"
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "enum": [
+          "16:9",
+          "9:16",
+          "4:3",
+          "3:4",
+          "1:1",
+          "2:3",
+          "3:2",
+          "21:9",
+          "auto"
+        ],
+        "default": "16:9",
+        "description": "auto用于V6 Omni；实际模型/引用组合由Platform判断。"
+      },
+      "img_ids": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "default": []
+      },
+      "image_references": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "img_id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 18446744073709551615
+            },
+            "ref_name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "type": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "img_id"
+          ],
+          "additionalProperties": false
+        },
+        "default": []
+      },
+      "video_references": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "source_video_id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 18446744073709551615
+            },
+            "video_media_id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 18446744073709551615
+            },
+            "ref_name": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [],
+          "additionalProperties": false,
+          "oneOf": [
+            {
+              "required": [
+                "source_video_id"
+              ]
+            },
+            {
+              "required": [
+                "video_media_id"
+              ]
+            }
+          ]
+        },
+        "default": []
+      },
+      "reference_mode": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "omni"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "prompt"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "not": {
+          "required": [
+            "img_ids",
+            "image_references"
+          ],
+          "properties": {
+            "img_ids": {
+              "minItems": 1
+            },
+            "image_references": {
+              "minItems": 1
+            }
+          }
+        },
+        "x-error-fields": [
+          "img_ids",
+          "image_references"
+        ],
+        "x-error-message": "img_ids与image_references是同一类引用的两种写法，请选择一种。"
+      },
+      {
+        "anyOf": [
+          {
+            "required": [
+              "img_ids"
+            ],
+            "properties": {
+              "img_ids": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "image_references"
+            ],
+            "properties": {
+              "image_references": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "video_references"
+            ],
+            "properties": {
+              "video_references": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "img_ids",
+          "image_references",
+          "video_references"
+        ],
+        "x-error-message": "请提供至少一种非空素材引用。"
+      }
+    ],
+    "description": "保留本工具字段、默认值和清晰度枚举；模型、时长、引用数量等动态组合由Platform判定。"
+  },
+  "video_generate": {
+    "type": "object",
+    "properties": {
+      "multi_clip": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "audio": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "negative_prompt": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "seed": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "可选整数随机种子；不隐式替换已提供值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "quality": {
+        "type": "string",
+        "enum": [
+          "360p",
+          "540p",
+          "720p",
+          "1080p"
+        ],
+        "default": "720p",
+        "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+      },
+      "duration": {
+        "type": "integer",
+        "minimum": 1,
+        "default": 5,
+        "description": "单位：秒；模型、引用类型及账号的有效时长范围由Platform判定，不改写显式传入值。"
+      },
+      "model": {
+        "type": "string",
+        "default": "v6"
+      },
+      "prompt": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S",
+        "maxLength": 5000
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "enum": [
+          "16:9",
+          "9:16",
+          "4:3",
+          "3:4",
+          "1:1",
+          "2:3",
+          "3:2",
+          "21:9"
+        ],
+        "default": "16:9"
+      }
+    },
+    "required": [
+      "prompt"
+    ],
+    "additionalProperties": false,
+    "description": "保留本工具字段、默认值和清晰度枚举；模型、时长、引用数量等动态组合由Platform判定。"
+  },
+  "video_get": {
+    "type": "object",
+    "properties": {
+      "video_id": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+    "required": [
+      "video_id"
+    ],
+    "additionalProperties": false
+  },
+  "video_lipsync": {
+    "type": "object",
+    "properties": {
+      "source_video_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "video_media_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "audio_media_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "tts_speaker_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "tts_content": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "oneOf": [
+          {
+            "required": [
+              "source_video_id"
+            ],
+            "properties": {
+              "source_video_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "video_media_id": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "video_media_id"
+            ],
+            "properties": {
+              "video_media_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source_video_id": {
+                "type": "null"
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "source_video_id",
+          "video_media_id"
+        ],
+        "x-error-message": "source_video_id 与 video_media_id 必须二选一。"
+      },
+      {
+        "oneOf": [
+          {
+            "required": [
+              "audio_media_id"
+            ],
+            "properties": {
+              "audio_media_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "tts_speaker_id": {
+                "type": "null"
+              },
+              "tts_content": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "tts_speaker_id",
+              "tts_content"
+            ],
+            "properties": {
+              "audio_media_id": {
+                "type": "null"
+              },
+              "tts_speaker_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "tts_content": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "audio_media_id",
+          "tts_speaker_id",
+          "tts_content"
+        ],
+        "x-error-message": "请选择audio_media_id，或同时提供tts_speaker_id与tts_content；两种输入不能混用。"
+      }
+    ]
+  },
+  "video_mask": {
+    "type": "object",
+    "properties": {
+      "source_video_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "video_media_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "keyframe_id": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "可选的非负关键帧编号；0请求自动选帧，省略时不注入默认帧。下游必须复用本次返回的实际keyframe_id与mask_id。"
+      }
+    },
+    "required": [],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "oneOf": [
+          {
+            "required": [
+              "source_video_id"
+            ],
+            "properties": {
+              "source_video_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "video_media_id": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "video_media_id"
+            ],
+            "properties": {
+              "video_media_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source_video_id": {
+                "type": "null"
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "source_video_id",
+          "video_media_id"
+        ],
+        "x-error-message": "source_video_id 与 video_media_id 必须二选一。"
+      }
+    ]
+  },
+  "video_mimic": {
+    "type": "object",
+    "properties": {
+      "source_video_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "video_media_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "img_id": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 18446744073709551615
+      },
+      "quality": {
+        "type": "string",
+        "enum": [
+          "360p",
+          "540p",
+          "720p"
+        ],
+        "default": "720p",
+        "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+      },
+      "post_reference": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "image",
+              "video"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "img_id"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "oneOf": [
+          {
+            "required": [
+              "source_video_id"
+            ],
+            "properties": {
+              "source_video_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "video_media_id": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "video_media_id"
+            ],
+            "properties": {
+              "video_media_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source_video_id": {
+                "type": "null"
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "source_video_id",
+          "video_media_id"
+        ],
+        "x-error-message": "source_video_id 与 video_media_id 必须二选一。"
+      }
+    ]
+  },
+  "video_modify": {
+    "type": "object",
+    "properties": {
+      "source_video_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "video_media_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "prompt": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S",
+        "maxLength": 5000
+      },
+      "img_ids": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "default": []
+      },
+      "mask_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "default": []
+      },
+      "mask_urls": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "format": "pixverse-https-url",
+          "description": "HTTPS URL，必须含域名，无内嵌凭据或片段，端口为默认或443；不限制素材供应商域名。MCP不读取本地文件，素材实际抓取和校验由Platform完成。"
+        },
+        "default": []
+      },
+      "keyframe_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "非负关键帧编号；使用Mask查询返回值，不猜测或替换关键帧。"
+      },
+      "quality": {
+        "type": "string",
+        "enum": [
+          "360p",
+          "540p",
+          "720p"
+        ],
+        "default": "540p",
+        "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+      },
+      "seed": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "可选整数随机种子；不隐式替换已提供值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "prompt"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "oneOf": [
+          {
+            "required": [
+              "source_video_id"
+            ],
+            "properties": {
+              "source_video_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "video_media_id": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "video_media_id"
+            ],
+            "properties": {
+              "video_media_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source_video_id": {
+                "type": "null"
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "source_video_id",
+          "video_media_id"
+        ],
+        "x-error-message": "source_video_id 与 video_media_id 必须二选一。"
+      },
+      {
+        "not": {
+          "required": [
+            "mask_ids",
+            "mask_urls"
+          ],
+          "properties": {
+            "mask_ids": {
+              "minItems": 1
+            },
+            "mask_urls": {
+              "minItems": 1
+            }
+          }
+        },
+        "x-error-fields": [
+          "mask_ids",
+          "mask_urls"
+        ],
+        "x-error-message": "mask_ids与mask_urls不能同时提供非空列表。"
+      },
+      {
+        "if": {
+          "required": [
+            "mask_ids"
+          ],
+          "properties": {
+            "mask_ids": {
+              "minItems": 1
+            }
+          }
+        },
+        "then": {
+          "required": [
+            "keyframe_id"
+          ],
+          "properties": {
+            "keyframe_id": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    ]
+  },
+  "video_multi_transition": {
+    "type": "object",
+    "properties": {
+      "frames": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "img_id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 18446744073709551615
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "单位：秒；除末帧外需要分段时长，具体范围由Platform按模型校验。"
+            },
+            "prompt": {
+              "type": "string",
+              "maxLength": 2048
+            }
+          },
+          "required": [
+            "img_id"
+          ],
+          "additionalProperties": false
+        },
+        "default": [],
+        "minItems": 2,
+        "description": "有序帧数组，至少两帧；duration单位秒，末帧不对应下一段，填写0或省略；模型对应分段和总时长由Platform校验。"
+      },
+      "model": {
+        "type": "string",
+        "default": "v5"
+      },
+      "quality": {
+        "type": "string",
+        "enum": [
+          "360p",
+          "540p",
+          "720p",
+          "1080p"
+        ],
+        "default": "720p",
+        "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+      },
+      "motion_mode": {
+        "type": "string",
+        "enum": [
+          "normal",
+          "fast"
+        ],
+        "default": "normal"
+      },
+      "seed": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "可选整数随机种子；不隐式替换已提供值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "frames"
+    ],
+    "additionalProperties": false
+  },
+  "video_restyle": {
+    "type": "object",
+    "properties": {
+      "source_video_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "video_media_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "restyle_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "restyle_prompt": {
+        "anyOf": [
+          {
+            "type": "string",
+            "maxLength": 5000
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "negative_prompt": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "seed": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "可选整数随机种子；不隐式替换已提供值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "oneOf": [
+          {
+            "required": [
+              "source_video_id"
+            ],
+            "properties": {
+              "source_video_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "video_media_id": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "video_media_id"
+            ],
+            "properties": {
+              "video_media_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source_video_id": {
+                "type": "null"
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "source_video_id",
+          "video_media_id"
+        ],
+        "x-error-message": "source_video_id 与 video_media_id 必须二选一。"
+      },
+      {
+        "oneOf": [
+          {
+            "required": [
+              "restyle_id"
+            ],
+            "properties": {
+              "restyle_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "restyle_prompt": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\s*$"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "required": [
+              "restyle_prompt"
+            ],
+            "properties": {
+              "restyle_prompt": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "restyle_id": {
+                "type": "null"
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "restyle_id",
+          "restyle_prompt"
+        ],
+        "x-error-message": "restyle_id 与 restyle_prompt 必须二选一。"
+      }
+    ]
+  },
+  "video_restyle_list": {
+    "type": "object",
+    "properties": {
+      "page": {
+        "type": "integer",
+        "minimum": 1,
+        "default": 1
+      },
+      "page_size": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 500,
+        "default": 50
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  },
+  "video_sound_effect": {
+    "type": "object",
+    "properties": {
+      "source_video_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "video_media_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "sound_effect_content": {
+        "anyOf": [
+          {
+            "type": "string",
+            "maxLength": 2048
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "original_sound": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "seed": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "可选整数随机种子；不隐式替换已提供值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "oneOf": [
+          {
+            "required": [
+              "source_video_id"
+            ],
+            "properties": {
+              "source_video_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "video_media_id": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "video_media_id"
+            ],
+            "properties": {
+              "video_media_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source_video_id": {
+                "type": "null"
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "source_video_id",
+          "video_media_id"
+        ],
+        "x-error-message": "source_video_id 与 video_media_id 必须二选一。"
+      }
+    ]
+  },
+  "video_swap": {
+    "type": "object",
+    "properties": {
+      "source_video_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "video_media_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "keyframe_id": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "非负关键帧编号；使用Mask查询返回值，不猜测或替换关键帧。"
+      },
+      "mask_id": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "img_id": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 18446744073709551615
+      },
+      "quality": {
+        "type": "string",
+        "enum": [
+          "360p",
+          "540p",
+          "720p"
+        ],
+        "default": "540p",
+        "description": "清晰度按本工具枚举填写；模型、时长、素材和账号的具体可用组合由Platform判定。"
+      },
+      "seed": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "可选整数随机种子；不隐式替换已提供值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "keyframe_id",
+      "mask_id",
+      "img_id"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "oneOf": [
+          {
+            "required": [
+              "source_video_id"
+            ],
+            "properties": {
+              "source_video_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "video_media_id": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "video_media_id"
+            ],
+            "properties": {
+              "video_media_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source_video_id": {
+                "type": "null"
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "source_video_id",
+          "video_media_id"
+        ],
+        "x-error-message": "source_video_id 与 video_media_id 必须二选一。"
+      }
+    ]
+  },
+  "video_upscale": {
+    "type": "object",
+    "properties": {
+      "source_video_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "video_media_id": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 18446744073709551615
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "seed": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "可选整数随机种子；不隐式替换已提供值。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "webhook_id": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[0-9]*[1-9][0-9]*$",
+            "description": "可选的正整数Webhook ID字符串；实际存在性和归属由Platform判断。"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "oneOf": [
+          {
+            "required": [
+              "source_video_id"
+            ],
+            "properties": {
+              "source_video_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "video_media_id": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "video_media_id"
+            ],
+            "properties": {
+              "video_media_id": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source_video_id": {
+                "type": "null"
+              }
+            }
+          }
+        ],
+        "x-error-fields": [
+          "source_video_id",
+          "video_media_id"
+        ],
+        "x-error-message": "source_video_id 与 video_media_id 必须二选一。"
+      }
+    ]
+  },
+  "voice_create": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S",
+        "description": "非空名称，最多128个字符；音频样本资格由Platform校验。",
+        "maxLength": 128
+      },
+      "audio_media_id": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 18446744073709551615
+      }
+    },
+    "required": [
+      "name",
+      "audio_media_id"
+    ],
+    "additionalProperties": false
+  },
+  "voice_delete": {
+    "type": "object",
+    "properties": {
+      "speaker_id": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^[Cc][Uu][Ss][Tt][Oo][Mm]_",
+        "description": "仅删除自定义音色，ID以custom_开头，大小写兼容；不额外限制后缀字符和长度，存在性及归属由Platform判断。"
+      }
+    },
+    "required": [
+      "speaker_id"
+    ],
+    "additionalProperties": false
+  },
+  "voice_list": {
+    "type": "object",
+    "properties": {
+      "page": {
+        "type": "integer",
+        "minimum": 1,
+        "default": 1
+      },
+      "page_size": {
+        "type": "integer",
+        "enum": [
+          10,
+          20,
+          50,
+          100
+        ],
+        "default": 20,
+        "description": "每页数量，默认20；不自动翻页。"
+      },
+      "speaker_type": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "system",
+              "custom",
+              "all"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": "all",
+        "description": "省略或null表示all，统一查询系统与自定义音色；使用system或custom可显式筛选。"
+      },
+      "scene": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "avatar",
+              "lip_sync"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}
