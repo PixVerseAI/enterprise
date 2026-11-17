@@ -1,6 +1,6 @@
 # PixVerse Showcase
 
-Browse original example videos, input assets, prompts, and recorded settings. Media is embedded from PixVerse CDN URLs; no document account is required. Video/audio rendering depends on your Markdown viewer.
+Browse original example videos, input assets, prompts, and recorded settings. Videos play directly on GitHub; images use PixVerse CDN URLs. Original media URLs are retained in [showcase data](showcase.json).
 
 ## Choose an example
 
@@ -97,7 +97,7 @@ CLI: `pixverse-api video from-image` · MCP: `video_from_image`
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2F152e8504-ce1e-46a6-ae08-316fcbb0cbc1.mp4" width="640"></video>
+https://github.com/user-attachments/assets/520867da-94eb-415d-a80f-4fa796b70ea2
 
 ## SC-03 Flower shop from day to night
 
@@ -131,7 +131,7 @@ CLI: `pixverse-api video f2v` · MCP: `video_f2v`
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2F3a4bc830-aed1-44d1-b4ba-198420add93b.mp4" width="640"></video>
+https://github.com/user-attachments/assets/dd295117-d037-4883-9eab-58d886f1bcb9
 
 ## SC-04 Mountain hiking with three references
 
@@ -177,7 +177,7 @@ CLI: `pixverse-api video fusion` · MCP: `video_fusion`
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2F2396b6f7-a134-4ff0-8249-c7579c2fb43e.mp4" width="640"></video>
+https://github.com/user-attachments/assets/5fa1626a-dc35-4a7c-87eb-223ee15c7b78
 
 ## SC-05 Continue shaping a pottery cup
 
@@ -185,7 +185,7 @@ CLI: `pixverse-api video extend` · MCP: `video_extend`
 
 ### Inputs
 
-<video controls src="https://media.pixverse.ai/openapi%2F1de3d5fb-6a9b-4a46-bd70-4ecf46b699af.mp4" width="640"></video>
+https://github.com/user-attachments/assets/d01a64d3-9f72-41e0-ba76-4594af5d333e
 
 ### Original prompt
 
@@ -208,7 +208,7 @@ CLI: `pixverse-api video extend` · MCP: `video_extend`
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2F2abd8d76-b7da-4447-8646-0a20756f65e0.mp4" width="640"></video>
+https://github.com/user-attachments/assets/93917274-02ea-43d2-b9c5-58de327aadcb
 
 ## SC-06 Widen a lighthouse coastline
 
@@ -216,7 +216,7 @@ CLI: `pixverse-api video expand` · MCP: `video_expand`
 
 ### Inputs
 
-<video controls src="https://media.pixverse.ai/openapi%2Ff5b4dea6-c0fc-4d62-9c6e-9bd4687ed149.mp4" width="640"></video>
+https://github.com/user-attachments/assets/1003b4da-0a15-4f0c-9eae-0bed23c851b3
 
 No generation prompt was supplied in the recorded request.
 
@@ -233,7 +233,7 @@ No generation prompt was supplied in the recorded request.
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2Fb5a35bf0-6108-47ac-813b-32b6e3f51b26.mp4" width="640"></video>
+https://github.com/user-attachments/assets/bcf2daed-b29e-4872-a7b8-7395c9d8ba02
 
 ## SC-07 Turn street dance into hand-drawn animation
 
@@ -241,7 +241,7 @@ CLI: `pixverse-api video restyle` · MCP: `video_restyle`
 
 ### Inputs
 
-<video controls src="https://media.pixverse.ai/openapi%2Fc3275115-309e-4bab-a1a2-f8e632428fab.mp4" width="640"></video>
+https://github.com/user-attachments/assets/bf6111d7-f0d9-446b-9b56-756ad98cccf2
 
 ### Original prompt
 
@@ -258,7 +258,7 @@ CLI: `pixverse-api video restyle` · MCP: `video_restyle`
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2F8b34fc5d-24c6-4430-a3cc-e5af132c21e2.mp4" width="640"></video>
+https://github.com/user-attachments/assets/9c423403-da08-40a5-8695-444934f9d170
 
 ## SC-08 Improve the animation resolution
 
@@ -266,7 +266,7 @@ CLI: `pixverse-api video upscale` · MCP: `video_upscale`
 
 ### Inputs
 
-<video controls src="https://media.pixverse.ai/openapi%2F8b34fc5d-24c6-4430-a3cc-e5af132c21e2.mp4" width="640"></video>
+https://github.com/user-attachments/assets/9c423403-da08-40a5-8695-444934f9d170
 
 No generation prompt was supplied in the recorded request.
 
@@ -282,7 +282,7 @@ No generation prompt was supplied in the recorded request.
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2F7e581140-529d-4caf-9b57-84d5707e5292.mp4" width="640"></video>
+https://github.com/user-attachments/assets/ffeb68fe-134e-4fd3-99c7-fdac4c92d219
 
 ## SC-09 Add gentle rain sounds
 
@@ -290,7 +290,7 @@ CLI: `pixverse-api video sound-effect` · MCP: `video_sound_effect`
 
 ### Inputs
 
-<video controls src="https://media.pixverse.ai/openapi%2F149ff957-70bb-4549-be32-7f4df892e8f0.mp4" width="640"></video>
+https://github.com/user-attachments/assets/f6a87eb7-d08f-4628-96e8-6ebc96824a98
 
 ### Original prompt
 
@@ -308,7 +308,7 @@ CLI: `pixverse-api video sound-effect` · MCP: `video_sound_effect`
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2Fb15df061-788a-42e0-95a8-98b11b64e20f.mp4" width="640"></video>
+https://github.com/user-attachments/assets/f5b6e4b9-5720-4ac9-a3b9-ac64ca653537
 
 ## SC-10 City street from morning to night
 
@@ -344,7 +344,7 @@ Frame prompts and per-segment durations are retained in [showcase data](showcase
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2F25b363c7-6a48-4f5c-a43f-ef8ea68b9d96.mp4" width="640"></video>
+https://github.com/user-attachments/assets/5b56f846-3fa5-4c1a-9b3a-b37d015b89e9
 
 ## SC-11 Remove a floor lamp
 
@@ -352,7 +352,7 @@ CLI: `pixverse-api video modify` · MCP: `video_modify`
 
 ### Inputs
 
-<video controls src="https://media.pixverse.ai/openapi%2Fc49e9fc1-f1c2-46e8-ac3b-51bf71652768.mp4" width="640"></video>
+https://github.com/user-attachments/assets/df24b8aa-c3dc-49cb-98b4-fa3f118c0462
 
 ### Original prompt
 
@@ -372,7 +372,7 @@ CLI: `pixverse-api video modify` · MCP: `video_modify`
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2F29246b14-ef06-4007-b4a0-dfa66f05ce44.mp4" width="640"></video>
+https://github.com/user-attachments/assets/6d42014e-8ac7-4dfe-8947-6d4d4fb1f9b4
 
 ## SC-12 Animate a character with a dance reference
 
@@ -382,7 +382,7 @@ CLI: `pixverse-api video mimic` · MCP: `video_mimic`
 
 ![Target character](https://media.pixverse.ai/openapi%2F0825d910-3ae6-4f48-a871-0c92f069f806_46ed42e912199da640160b154340d39b_auto.png)
 
-<video controls src="https://media.pixverse.ai/openapi%2Fc3275115-309e-4bab-a1a2-f8e632428fab.mp4" width="640"></video>
+https://github.com/user-attachments/assets/bf6111d7-f0d9-446b-9b56-756ad98cccf2
 
 No generation prompt was supplied in the recorded request.
 
@@ -399,7 +399,7 @@ No generation prompt was supplied in the recorded request.
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2F2400caae-5c3c-43a1-aa16-62db9157ea99.mp4" width="640"></video>
+https://github.com/user-attachments/assets/bc15204f-31b2-42f0-9198-427e997f10f9
 
 ## SC-13 A short lifestyle message
 
@@ -407,7 +407,7 @@ CLI: `pixverse-api video lipsync` · MCP: `video_lipsync`
 
 ### Inputs
 
-<video controls src="https://media.pixverse.ai/openapi%2F5292d2e6-20fc-4cbb-a407-d86920620374.mp4" width="640"></video>
+https://github.com/user-attachments/assets/8a223b71-7b4e-4be3-ab78-590f0c0e1596
 
 ### Original speech text
 
@@ -425,7 +425,7 @@ CLI: `pixverse-api video lipsync` · MCP: `video_lipsync`
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2F4b6b6edd-3291-41f9-813e-01f974743790.mp4" width="640"></video>
+https://github.com/user-attachments/assets/e3b27969-e6b7-4621-b7df-45da9bc8983e
 
 ## SC-14 A welcoming brand introduction
 
@@ -453,7 +453,7 @@ The original Chinese speech text is retained verbatim in [showcase data](showcas
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2Fca3f9b46-fa99-4e3c-9e36-ac4d5b4d6618.mp4" width="640"></video>
+https://github.com/user-attachments/assets/8fc6c4ce-0b21-4983-a17c-4cb38c5cbb7c
 
 ## SC-15 Replace a corridor character
 
@@ -461,7 +461,7 @@ CLI: `pixverse-api video swap` · MCP: `video_swap`
 
 ### Inputs
 
-<video controls src="https://media.pixverse.ai/openapi%2F225a364e-2f68-436a-a7b2-cd7f09caaa01.mp4" width="640"></video>
+https://github.com/user-attachments/assets/a7914f49-2069-4a85-a4dd-32124c0c13e8
 
 ![Replacement character](https://media.pixverse.ai/openapi%2Fdac6d26d-023b-41b8-97e8-387c10918137_72f4a17fd5d2e87c014727dd535570b9_auto.png)
 
@@ -483,7 +483,7 @@ No generation prompt was supplied in the recorded request.
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2Fc9cf5eea-465b-4151-ba70-00989e175451.mp4" width="640"></video>
+https://github.com/user-attachments/assets/cd4b2546-4065-414d-b10e-7d776a135901
 
 ## SC-16 Midnight Haunts music video
 
@@ -521,7 +521,7 @@ CLI: `pixverse-api agent mv` · MCP: `agent_mv`
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2Fa4a8113a-572c-45cd-8b34-9ea9c2f98d0a.mp4" width="640"></video>
+https://github.com/user-attachments/assets/9f17f892-a36b-463f-ac31-33c1721986ef
 
 ## SC-17 A presenter introduces a crossbody bag
 
@@ -562,7 +562,7 @@ CLI: `pixverse-api agent ecommerce-native` · MCP: `agent_ecommerce_native`
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2F4972f6aa-3b50-4505-a1a9-113be116ae07.mp4" width="640"></video>
+https://github.com/user-attachments/assets/47bb9ddc-65b8-42a8-9041-de08d8042087
 
 ## SC-18 A crossbody bag ad without a visible presenter
 
@@ -601,7 +601,7 @@ CLI: `pixverse-api agent ecommerce-template` · MCP: `agent_ecommerce_template`
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2F0b6fe0d9-74fc-43a2-bcac-2c1da703239f.mp4" width="640"></video>
+https://github.com/user-attachments/assets/70fd5f68-8af3-4071-ab93-d19a03726e83
 
 ## Video templates
 
