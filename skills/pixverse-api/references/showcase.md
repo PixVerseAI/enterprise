@@ -1,6 +1,6 @@
 # PixVerse Showcase
 
-Browse original example videos, input assets, prompts, and recorded settings. Videos play directly on GitHub; images use PixVerse CDN URLs. Original media URLs are retained in [showcase data](showcase.json).
+Browse original example videos, input assets, prompts, and recorded settings. Videos and the music preview play directly on GitHub; images use PixVerse CDN URLs. Original media URLs are retained in [showcase data](showcase.json).
 
 ## Choose an example
 
@@ -493,7 +493,9 @@ CLI: `pixverse-api agent mv` · MCP: `agent_mv`
 
 ![Character reference](https://media.pixverse.ai/openapi%2Fc40a2ad3-97c6-4077-aa49-9545a1576105_5c06cd2cbbeb139efcb7ff5ab24e0068_auto.png)
 
-<audio controls src="https://media.pixverse.ai/openapi%2F8aa72df8-0fb5-4a95-9a48-09bfd9671a65.mp3"></audio>
+Music reference preview (unmute to listen). For reproduction, use the original MP3 in [showcase data](showcase.json).
+
+https://github.com/user-attachments/assets/e177583c-8aab-4087-a229-5831800f1d89
 
 ### Original prompt
 
