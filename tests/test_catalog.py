@@ -458,13 +458,14 @@ def test_template_read_failure_is_not_a_write_failure(sequence):
     assert data["stage"] == "discovery" and data["submission_state"] == "not_submitted"
 
 
-def test_avatar_readme_qualities_match_input_contract():
-    """双语Avatar说明须覆盖当前协议清晰度，避免能力表遗留旧范围。"""
+def test_avatar_guides_qualities_match_input_contract():
+    """首页可精简，迁移后的CLI/MCP指南仍须覆盖当前Avatar清晰度。"""
     root = Path(__file__).resolve().parents[1]
     expected = set(SCHEMAS["video_avatar"]["properties"]["quality"]["enum"])
-    chinese = next(line for line in (root / "README.zh-CN.md").read_text().splitlines()
-                   if line.startswith("| Avatar |"))
-    english = re.search(r"Avatar accepts ([0-9p/]+)", (root / "README.md").read_text())
-    assert english is not None
-    assert set(re.findall(r"\d+p", chinese)) == expected
-    assert set(english.group(1).split("/")) == expected
+    for name in ("cli", "mcp"):
+        guide = re.search(r"Avatar (?:accepts|supports) ([0-9p/]+)",
+                          (root / "docs" / f"{name}.md").read_text())
+        assert guide is not None
+        assert set(guide.group(1).split("/")) == expected
+        for readme in ("README.md", "README.zh-CN.md"):
+            assert f"](docs/{name}.md)" in (root / readme).read_text()

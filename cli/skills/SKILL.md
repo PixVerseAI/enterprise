@@ -1,47 +1,49 @@
 ---
-name: pixverse-platform
-description: 使用 pixverse-api CLI 在国内或海外生产开放平台上传素材、查询余额、生成和编辑视频，以及调用电商 Native/Template 和统一 V3 MV。
+name: pixverse-api-cli
+description: Use the pixverse-api CLI to upload assets, query balances, generate and edit videos, and run ecommerce Native/Template and unified V3 MV on the selected production Platform API.
 ---
 
-# PixVerse Platform
+# PixVerse API CLI
 
-使用已安装的 `pixverse-api`；根选项 `--region global|cn` 选择对应生产 API，默认 `global`，不读取地区环境变量。API Key 仅通过 `PIXVERSE_API_KEY` 提供。凭据由用户自行在运行环境配置；不要读取认证文件、打印Key或把Key放进参数、文档。只使用同地区、同账号资源。
+This file is the command guide bundled with the CLI package. The repository's shared `pixverse-api` skill provides business guidance for both CLI and MCP. When installing a skill for an AI assistant, install the complete shared skill directory, including its references.
 
-先读子命令的 `--help`。全局 `--region`、`--json`、`--timeout` 放在子命令之前。成功JSON在stdout，错误在stderr；退出码2为配置/输入错误，1为请求错误或任务失败终态。
+Use the installed `pixverse-api`. The root option `--region global|cn` selects the production API and defaults to `global`; the CLI does not read a region environment variable. Supply the API key only through `PIXVERSE_API_KEY`. Users configure credentials in their runtime environment. Do not read authentication files, print keys, or put keys in command arguments or documents. Use resources belonging to the same region and account.
 
-## 命令选择
+Read the subcommand's `--help` first. Put global `--region`, `--json`, and `--timeout` options before the subcommand. Successful JSON goes to stdout and errors to stderr. Exit code 2 means a configuration/input error; 1 means a request error or terminal task failure.
 
-- 余额/上传：`account balance`、`image upload`、`media upload`。上传的`--file`与`--url`二选一。URL使用HTTPS，端口为默认或443，不含内嵌凭据、片段或空白；不限制供应商域名。
-- 用量：`account usage`查询当前Key的消耗/返还明细。首次给start-time/end-time，国内UTC+8、海外UTC，左闭右开；时间窗口和日期先后由Platform校验；可重复creation-type/credits-status，每次一页，续页只原样传cursor。
-- 视频模板：`template list`只查视频，支持template-id/mode/page/page-size；`template generate --id`先读元数据再提交，纯视频输出限定。传统模板必填model/duration/quality，单图或按顺序重复img-id；Workflow只用重复input JSON，每项input_key及一种text/img_id/video_media_id/source_video_id/audio_media_id。文字默认值和动态input_limit由Platform校验；先查当前可用模板，不猜节点key，不跨地区回退。
-- 基础T2V/I2V支持webhook-id及negative-prompt；具体模型组合由服务端校验，不把省略选项变成显式默认值。
-- 基础生成：`video generate`（T2V）、`video from-image`（I2V）、`video f2v`、`video fusion`。I2V提示词可省略，填写时最多5000字符；画幅沿用图片，不提供比例选项。
-- 音效：`video sound-effect`，视频来源二选一，可选sound-effect-content和original-sound开关；不传模型或清晰度。
-- 多帧转场：`video multi-transition`默认V5，按顺序重复至少两个`--frame` JSON；每段duration属于起始帧，末帧省略或填0。帧数上限、分段及总时长由Platform校验，CLI不改写。
-- 编辑：`video extend`、`expand`、`upscale`、`restyle`、`mimic`、`swap`、`modify`。
-- 数字人：`video lipsync`、`video avatar`。音频`--audio-media-id`与TTS参数组`--tts-speaker-id/--tts-content`严格二选一。Avatar支持360p/540p/720p/1080p，可选prompt上限2048字符；Avatar TTS要求30–200个Unicode码点，由Platform校验实际文本。
-- 前置查询：`voice list`、`video restyle-list`、`video mask`。
-- 自定义音色：上传最长30秒语音样本，再`voice create --name ... --audio-media-id ...`；`voice list --type custom|system|all --scene avatar|lip_sync`使用新列表及试听字段，省略type默认all，每页20条；page-size仅10/20/50/100，全部走新版音色列表。用返回custom_音色ID供LipSync/Avatar等TTS输入；`voice delete --speaker-id ...`只删除明确指定的自定义音色，不自动重试。
-- 电商只使用`agent ecommerce-native`（414562414124107）或`agent ecommerce-template`（414562414124108）；不替换成其他Agent。需要至少一种非空图片引用、prompt、15/30/45/60秒和language-code；图片数量及avatar有效性由Platform校验；Template另需video-style。
-- 电商`--image-ref`支持img_id/ref_name并保留引用名，与`--img-id`二选一。TTS数字ID不跨地区假设音色相同，先按`voice list`核对名称和语言。
-- MV：`agent mv`固定`vibe_mv_v3_custom`。上传音频后直接提交，服务端异步校验依赖目标地域后端部署；可传角色图、Custom风格图、歌词时间戳和preserve-outfit。
+## Choose a command
 
-## 资源与参数
+- Balance/uploads: `account balance`, `image upload`, and `media upload`. Upload with exactly one of `--file` or `--url`. URLs must use HTTPS with the default port or port 443, without embedded credentials, fragments, or whitespace. Vendor domains are not restricted.
+- Usage: `account usage` queries consumption/refund entries for the current key. Supply start-time/end-time on the first page; timestamps use UTC+8 for `cn` and UTC for `global`, with an inclusive start and exclusive end. Platform validates the date ordering and time window. Repeat creation-type/credits-status as needed, request one page at a time, and pass only the unchanged cursor for subsequent pages.
+- Video templates: `template list` queries video templates and supports template-id/mode/page/page-size. `template generate --id` reads metadata before submitting and supports video-only outputs. Standard templates require model/duration/quality and one image or ordered repeated img-id values. Workflows use repeated input JSON objects, each with input_key and exactly one of text/img_id/video_media_id/source_video_id/audio_media_id. Platform validates text defaults and dynamic input_limit rules. Query available templates first, do not invent node keys, and do not fall back across regions.
+- Basic T2V/I2V supports webhook-id and negative-prompt. The server validates model combinations. Do not replace omitted options with explicit defaults.
+- Basic generation: `video generate` (T2V), `video from-image` (I2V), `video f2v`, and `video fusion`. The I2V prompt is optional and accepts at most 5000 characters when supplied. Its aspect ratio follows the input image; no aspect-ratio option is provided.
+- Sound effects: `video sound-effect` takes exactly one video source and optional sound-effect-content and original-sound switches. Do not supply a model or resolution.
+- Multi-frame transitions: `video multi-transition` defaults to V5 and requires at least two ordered `--frame` JSON objects. Each segment duration belongs to its starting frame; omit duration or use 0 on the final frame. Platform validates maximum frame counts, segment durations, and total duration; the CLI does not rewrite them.
+- Editing: `video extend`, `expand`, `upscale`, `restyle`, `mimic`, `swap`, and `modify`.
+- Speaking characters: `video lipsync` and `video avatar`. Supply either `--audio-media-id` or both `--tts-speaker-id` and `--tts-content`. Avatar supports 360p/540p/720p/1080p and an optional prompt of up to 2048 characters. Avatar TTS requires 30-200 Unicode code points; Platform validates the actual text.
+- Prerequisite queries: `voice list`, `video restyle-list`, and `video mask`.
+- Custom voices: upload a speech sample of at most 30 seconds, then call `voice create --name ... --audio-media-id ...`. `voice list --type custom|system|all --scene avatar|lip_sync` uses the new voice list and preview fields. Omitted type defaults to all, with 20 entries per page; page-size supports only 10/20/50/100. Use the returned `custom_` voice ID for LipSync/Avatar TTS. `voice delete --speaker-id ...` deletes only the explicitly selected custom voice and does not retry automatically.
+- Ecommerce uses only `agent ecommerce-native` (414562414124107) or `agent ecommerce-template` (414562414124108), not substitute agents. Require at least one nonempty image reference, prompt, a duration of 15/30/45/60 seconds, and language-code. Platform validates image counts and avatar eligibility. Template additionally requires video-style.
+- Ecommerce `--image-ref` supports img_id/ref_name and preserves reference names; it is mutually exclusive with `--img-id`. Do not assume a numeric TTS ID identifies the same voice across regions. Check names and languages with `voice list` first.
+- MV: `agent mv` uses `vibe_mv_v3_custom`. Submit directly after uploading audio; asynchronous audio validation depends on the target backend deployment. Character images, Custom style images, lyric timestamps, and preserve-outfit are supported.
 
-视频来源必须且只能提供`--source-video-id`或`--video-media-id`。Mask的keyframe-id可省略，不注入默认帧；命令同步返回结果，不是video_id；Swap使用相同源视频及同次Mask响应的keyframe_id与字符串mask_id。Modify重复`--mask-id`和`--img-id`时保留顺序；Mask ID需要显式keyframe-id。
+## Resources and parameters
 
-Fusion可重复`--img-id`，或重复`--image-ref` JSON对象提供img_id/type/ref_name；视频参考用`--video-ref`。支持V6 Omni和aspect-ratio=auto；图片模式显式填正秒，Omni视频模式显式填0，省略duration时不注入值。模型组合、引用数量和名称有效性由Platform校验。
+Provide exactly one video source: `--source-video-id` or `--video-media-id`. Mask keyframe-id is optional; do not inject a default frame. Mask selection returns a synchronous result, not a video_id. Swap uses the same source video and the keyframe_id and string mask_id from the same mask response. Preserve the order of repeated `--mask-id` and `--img-id` options for Modify. Mask IDs require an explicit keyframe-id.
 
-MV角色图与风格图各最多1张，风格图只用于Custom；Custom至少有一种参考图。新风格由服务端校验，不使用过时枚举替换用户选择。歌词文件形如`{"words":[{"start":0,"end":0.5,"word":"你好"}]}`；start/end必须是非负有限数值，顺序、不重叠、字数及真实音频时长匹配由Platform校验。显式`--no-caption`、`--no-lip-sync`、`--no-preserve-outfit`会保留false。
+Fusion accepts repeated `--img-id` values or repeated `--image-ref` JSON objects with img_id/type/ref_name. Use `--video-ref` for video references. V6 Omni and aspect-ratio=auto are supported. Supply positive seconds for image mode and 0 for Omni video mode; omitted duration is not injected. Platform validates model combinations, reference counts, and names.
 
-## 提交与查询
+MV accepts at most one character image and one style image. Style images apply only to Custom, which requires at least one reference image. The server validates new styles; do not substitute an outdated enum for the user's selection. A lyrics file has the form `{"words":[{"start":0,"end":0.5,"word":"Hello"}]}`. start/end must be finite nonnegative numbers. Platform validates ordering, non-overlap, word counts, and alignment with the actual audio duration. Explicit `--no-caption`, `--no-lip-sync`, and `--no-preserve-outfit` preserve false.
 
-创建可能消耗真实生产点数，仅在用户授权后执行。创建响应的`submission=accepted`和`response.Resp.video_id`表示受理；默认只报告ID，只有用户要求等待/监控时才主动查询。查询使用`pixverse-api --region <本次地区> --json video get --id <video_id>`，查询沿用创建时的地区，可直接使用返回的 `query_command`；不要重新创建。
+## Submission and queries
 
-Workflow模板创建返回`response.Resp.task_id`，使用`pixverse-api --region <本次地区> --json template get --id <task_id>`；不要把task_id当video_id。成功视频链接汇总在output_urls，只有一条时另有output_url。图片/混合输出及既有排除Agent不因模板入口扩大接入范围。
+Creation can consume production credits and requires user authorization. A response with `submission=accepted` and `response.Resp.video_id` indicates acceptance. By default, report only the ID; query proactively only when the user requests waiting or monitoring. Use `pixverse-api --region <selected-region> --json video get --id <video_id>` with the region used for creation, or the returned `query_command`. Do not recreate the task.
 
-`task_status`同时归一化普通数字状态和Agent的running/succeeded/failed状态。成功结果统一在`output_url`，原协议保留在response中。`output_url_verified=false`表示CLI没有探测链接，不据此声称成片可访问。网络超时可能已经创建任务，禁止直接重试写请求。`Resp.credits`不替代最终扣费账本。
+Workflow template creation returns `response.Resp.task_id`. Query it with `pixverse-api --region <selected-region> --json template get --id <task_id>`; do not treat task_id as video_id. Successful video links appear in output_urls, with output_url also provided for a single link. Template access does not expand scope to image/mixed outputs or previously excluded agents.
 
-JSON还包含`stage`和`submission_state`：本地校验或模板发现失败为`not_submitted`，Platform业务拒绝为`rejected`，确认写入为`accepted`，写入超时或成功响应缺少有效ID等不确定结果为`unknown`；只读为`not_applicable`。`unknown`不代表未受理或未扣费，禁止直接重发。失败终态`ok=false`且退出码1。输入错误提供字段、约束和允许值；上游公开错误保留在error.response并脱敏。
+`task_status` normalizes both ordinary numeric statuses and agent running/succeeded/failed statuses. Successful results use `output_url`, while response preserves the original protocol. `output_url_verified=false` means the CLI did not probe the link; do not claim the output is accessible. A network timeout may occur after task creation, so do not directly retry writes. `Resp.credits` does not replace the final billing ledger.
 
-CLI仅校验打包的公开契约；模型可用性、数量、权限、审核、计费和动态模板规则由Platform处理，不自行降级模型或省略用户要求。
+JSON also includes `stage` and `submission_state`: local validation or template discovery failure is `not_submitted`, explicit Platform business refusal is `rejected`, a confirmed write is `accepted`, and uncertain outcomes such as write timeouts or successful responses without valid IDs are `unknown`. Read-only operations use `not_applicable`. Unknown does not mean unaccepted or uncharged; do not resend directly. Terminal failures return `ok=false` and exit code 1. Input errors include the field, constraint, and allowed values. Public upstream errors are retained in error.response with sensitive information redacted.
+
+The CLI validates only its packaged public contract. Platform handles model availability, counts, permissions, moderation, billing, and dynamic template rules. Do not downgrade models or omit user requirements.

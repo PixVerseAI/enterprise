@@ -1,4 +1,8 @@
 include README.md
 include README.zh-CN.md
+include AGENTS.md
+include scripts/install_skill.py
+include scripts/install.py
 recursive-include tests *.py
-recursive-include skills *.md
+recursive-include skills *.md *.json
+recursive-include docs *.md

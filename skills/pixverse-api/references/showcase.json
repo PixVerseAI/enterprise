@@ -1,0 +1,802 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "SC-01",
+      "title": "Desert road at sunset",
+      "capability": "T2V",
+      "cli": "video generate",
+      "mcp": "video_generate",
+      "prompt": "A single continuous cinematic wide shot of one vintage off-road vehicle driving steadily along a winding desert road at sunset. The vehicle remains on the road with realistic wheel contact, distant dunes stay stable, a modest trail of dust follows behind. Smooth tracking camera, natural golden light. No cuts, no other vehicles or people, no text or logos.",
+      "recorded_platform_parameters": {
+        "prompt": "A single continuous cinematic wide shot of one vintage off-road vehicle driving steadily along a winding desert road at sunset. The vehicle remains on the road with realistic wheel contact, distant dunes stay stable, a modest trail of dust follows behind. Smooth tracking camera, natural golden light. No cuts, no other vehicles or people, no text or logos.",
+        "negative_prompt": "",
+        "model": "v6-max",
+        "aspect_ratio": "16:9",
+        "quality": "720p",
+        "duration": 8,
+        "motion_mode": "normal",
+        "seed": 661002,
+        "water_mark": false,
+        "generate_audio_switch": false
+      },
+      "inputs": [],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2F15d6be23-046c-4efe-ba25-67eec1b2f497.mp4",
+        "original_sha256": "3d7902a344d1dbf25d34ebdc60723e330cdeb1829a251a1f52e172d7ec00aa43",
+        "original_size_bytes": 2595135,
+        "duration_seconds": 8.041667,
+        "width": 1280,
+        "height": 720
+      },
+      "notes": []
+    },
+    {
+      "id": "SC-02",
+      "title": "Lakeside camping coffee",
+      "capability": "I2V",
+      "cli": "video from-image",
+      "mcp": "video_from_image",
+      "prompt": "Animate this exact lakeside camp photo in one continuous locked camera shot. The same seated camper slowly tilts the same metal coffee pot and pours a thin coherent stream into the same mug on the table, then returns the pot upright. Preserve the hands, mug handle, tent, lake and mountains, realistic gravity, no sudden object changes, no extra people, no text.",
+      "recorded_platform_parameters": {
+        "prompt": "Animate this exact lakeside camp photo in one continuous locked camera shot. The same seated camper slowly tilts the same metal coffee pot and pours a thin coherent stream into the same mug on the table, then returns the pot upright. Preserve the hands, mug handle, tent, lake and mountains, realistic gravity, no sudden object changes, no extra people, no text.",
+        "negative_prompt": "",
+        "model": "v6-max",
+        "quality": "720p",
+        "duration": 8,
+        "motion_mode": "normal",
+        "seed": 661004,
+        "water_mark": false,
+        "generate_audio_switch": false
+      },
+      "inputs": [
+        {
+          "label": "Camp image",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2Fdb61b438-68d5-4740-a409-61c4a48e0c5e_747fd35610f63e434951214e17b21177_auto.png",
+          "original_sha256": "0e8ae27c3960efbcfa2a56e058736f817018e63f5ec2bfe1a254862a5a01efac",
+          "original_size_bytes": 2382946
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2F152e8504-ce1e-46a6-ae08-316fcbb0cbc1.mp4",
+        "original_sha256": "fddaff5793ebb48a46e67d565c11a06faae1ec3f492b05825c902e5a8b2af764",
+        "original_size_bytes": 3332129,
+        "duration_seconds": 8.041667,
+        "width": 1280,
+        "height": 720
+      },
+      "notes": []
+    },
+    {
+      "id": "SC-03",
+      "title": "Flower shop from day to night",
+      "capability": "F2V",
+      "cli": "video f2v",
+      "mcp": "video_f2v",
+      "prompt": "One seamless locked-off shot of the same flower shop. Daylight gradually fades through dusk into blue-hour night while the existing shop interior lights and wall lanterns gently illuminate, arriving precisely at the final frame. Keep door, windows, plants, flowers, awning, architecture and camera composition stable. No people, no cuts, no text.",
+      "recorded_platform_parameters": {
+        "prompt": "One seamless locked-off shot of the same flower shop. Daylight gradually fades through dusk into blue-hour night while the existing shop interior lights and wall lanterns gently illuminate, arriving precisely at the final frame. Keep door, windows, plants, flowers, awning, architecture and camera composition stable. No people, no cuts, no text.",
+        "negative_prompt": "",
+        "model": "v6",
+        "quality": "720p",
+        "duration": 8,
+        "motion_mode": "normal",
+        "seed": 661007,
+        "water_mark": false,
+        "generate_audio_switch": false,
+        "play_bgm": false
+      },
+      "inputs": [
+        {
+          "label": "First frame",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2F8184b180-1982-4959-8bf2-e1b9668105ae_69ff311e7e4434e235b82c3188352583_auto.png",
+          "original_sha256": "69d443ce78b0666df504998dac55c47a39421bfd5b09cb6f1d2a21eb49bc6a9e",
+          "original_size_bytes": 2498855
+        },
+        {
+          "label": "Last frame",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2Fc95566eb-33d8-4899-b494-7853702e0b9b_e9053a0618d0cb2e05bc4814df754409_auto.png",
+          "original_sha256": "12d9bbdf5478f3b91186aabf56709e993aeda441d5e666049a4f18513a72914b",
+          "original_size_bytes": 2343827
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2F3a4bc830-aed1-44d1-b4ba-198420add93b.mp4",
+        "original_sha256": "e19c6e3c4435ab3ee93ffd153fa9a6d66f9c03b3b2c7d5c9e285db4174954960",
+        "original_size_bytes": 2015181,
+        "duration_seconds": 8.041667,
+        "width": 1280,
+        "height": 720
+      },
+      "notes": []
+    },
+    {
+      "id": "SC-04",
+      "title": "Mountain hiking with three references",
+      "capability": "Fusion",
+      "cli": "video fusion",
+      "mcp": "video_fusion",
+      "prompt": "At @place , @person wears @item and walks slowly along the gravel path near the wooden railing, then gently turns toward the camera. Preserve his face, curly hair, body shape, the burnt-orange jacket with charcoal zippers, and the distant mountain landscape. Stable realistic footing and natural movement, one continuous shot, no other people, no logos or text.",
+      "recorded_platform_parameters": {
+        "prompt": "At @place , @person wears @item and walks slowly along the gravel path near the wooden railing, then gently turns toward the camera. Preserve his face, curly hair, body shape, the burnt-orange jacket with charcoal zippers, and the distant mountain landscape. Stable realistic footing and natural movement, one continuous shot, no other people, no logos or text.",
+        "negative_prompt": "",
+        "model": "v6",
+        "quality": "720p",
+        "duration": 8,
+        "seed": 661011,
+        "water_mark": false,
+        "generate_audio_switch": false,
+        "image_references": [
+          {
+            "ref_name": "person"
+          },
+          {
+            "ref_name": "item"
+          },
+          {
+            "ref_name": "place"
+          }
+        ],
+        "aspect_ratio": "16:9"
+      },
+      "inputs": [
+        {
+          "label": "Person reference: person",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2F0f159618-0097-421b-aaed-29592ceb050d_17fa6bd96bc37909ec2b1d15b592de61_auto.png",
+          "original_sha256": "9a5126946419fc873a745a41b28f648662b1979249469a103610be8202f854c9",
+          "original_size_bytes": 1829448
+        },
+        {
+          "label": "Jacket reference: item",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2F45956e7e-015a-4957-8aa5-279f1c8eaa1d_7b01f4de536ea2f2ff2127e55588c48d_auto.png",
+          "original_sha256": "ce547c673d06241dd0921a2191f9c720c3233bc5b10ddb9896de1049cf297d5c",
+          "original_size_bytes": 2184130
+        },
+        {
+          "label": "Location reference: place",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2Fd1b1acd6-f407-468b-aa99-82fe4decbaab_494ee7d153c9b61818af5c119a892762_auto.png",
+          "original_sha256": "7738908d3e448bde03a36729ec057a62ba1f8e735d45fc9d0164b6a12408b907",
+          "original_size_bytes": 3158312
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2F2396b6f7-a134-4ff0-8249-c7579c2fb43e.mp4",
+        "original_sha256": "5f75be176ecdd0a0f506587232e0c381c42dc7c9c68e8c03dfc2d6e938936719",
+        "original_size_bytes": 3220012,
+        "duration_seconds": 8.041667,
+        "width": 1280,
+        "height": 720
+      },
+      "notes": []
+    },
+    {
+      "id": "SC-05",
+      "title": "Continue shaping a pottery cup",
+      "capability": "Extend",
+      "cli": "video extend",
+      "mcp": "video_extend",
+      "prompt": "Continue the same uninterrupted close shot for five seconds. The same potter gently refines the same one clay cup on the same spinning wheel. Both hands maintain physically plausible contact; the continuous circular rim slowly becomes smooth and even. Preserve one cup, correct fingers, wheel rotation direction, body, studio, lighting and camera position throughout. Natural slow movements, no cuts or added objects.",
+      "recorded_platform_parameters": {
+        "model": "v6",
+        "duration": 5,
+        "quality": "720p",
+        "motion_mode": "normal",
+        "generate_audio_switch": false,
+        "water_mark": false,
+        "seed": 631102,
+        "prompt": "Continue the same uninterrupted close shot for five seconds. The same potter gently refines the same one clay cup on the same spinning wheel. Both hands maintain physically plausible contact; the continuous circular rim slowly becomes smooth and even. Preserve one cup, correct fingers, wheel rotation direction, body, studio, lighting and camera position throughout. Natural slow movements, no cuts or added objects.",
+        "negative_prompt": "extra fingers, fused hands, floating hands, broken cup, extra cups, warped rim, reversed wheel, jump cut, text, logos"
+      },
+      "inputs": [
+        {
+          "label": "Pottery source video",
+          "type": "video",
+          "url": "https://media.pixverse.ai/openapi%2F1de3d5fb-6a9b-4a46-bd70-4ecf46b699af.mp4",
+          "original_sha256": "26115ed7a7792daaaa14f960a4bea10662266b4a6c761207288b003cb08d108e",
+          "original_size_bytes": 3001527,
+          "duration_seconds": 8.041667,
+          "width": 1280,
+          "height": 720
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2F2abd8d76-b7da-4447-8646-0a20756f65e0.mp4",
+        "original_sha256": "53743e866626282a014fefefc7835763262069bf7a6b3e0756e47eca598bf03a",
+        "original_size_bytes": 3473097,
+        "duration_seconds": 13.125,
+        "width": 1280,
+        "height": 720
+      },
+      "notes": []
+    },
+    {
+      "id": "SC-06",
+      "title": "Widen a lighthouse coastline",
+      "capability": "Expand",
+      "cli": "video expand",
+      "mcp": "video_expand",
+      "prompt": null,
+      "recorded_platform_parameters": {
+        "quality": "720p",
+        "aspect_ratio": "16:9"
+      },
+      "inputs": [
+        {
+          "label": "Portrait coastline video",
+          "type": "video",
+          "url": "https://media.pixverse.ai/openapi%2Ff5b4dea6-c0fc-4d62-9c6e-9bd4687ed149.mp4",
+          "original_sha256": "49f191a412ed46796a09cdc695891e5fe6b4f427cd2899039c50f23bc6742ebe",
+          "original_size_bytes": 4517005,
+          "duration_seconds": 8.041667,
+          "width": 720,
+          "height": 1280
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2Fb5a35bf0-6108-47ac-813b-32b6e3f51b26.mp4",
+        "original_sha256": "b216113a711c031b965cee4b82913aaa218f038d21b93ae83339cabed8f74cfa",
+        "original_size_bytes": 11281077,
+        "duration_seconds": 8.041667,
+        "width": 1280,
+        "height": 720
+      },
+      "notes": [
+        "No prompt or seed was supplied in the recorded request."
+      ]
+    },
+    {
+      "id": "SC-07",
+      "title": "Turn street dance into hand-drawn animation",
+      "capability": "Restyle",
+      "cli": "video restyle",
+      "mcp": "video_restyle",
+      "prompt": "A vivid hand-drawn 2D anime animation, bold black ink outlines, cel-shaded illustrated face and clothing, flat graphic colors and a painted cartoon background. The whole scene is fully illustrated frame by frame.",
+      "recorded_platform_parameters": {
+        "seed": 610604,
+        "restyle_prompt": "A vivid hand-drawn 2D anime animation, bold black ink outlines, cel-shaded illustrated face and clothing, flat graphic colors and a painted cartoon background. The whole scene is fully illustrated frame by frame.",
+        "negative_prompt": "photorealism, realistic photograph, live action, blurry, flicker, text, logo"
+      },
+      "inputs": [
+        {
+          "label": "Dance source video",
+          "type": "video",
+          "url": "https://media.pixverse.ai/openapi%2Fc3275115-309e-4bab-a1a2-f8e632428fab.mp4",
+          "original_sha256": "3579b3f8f21a2b5f9b9146cc40b42592fbcd9da72616dd5e7be514b4236741e5",
+          "original_size_bytes": 2076484,
+          "duration_seconds": 8.041667,
+          "width": 720,
+          "height": 1280
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2F8b34fc5d-24c6-4430-a3cc-e5af132c21e2.mp4",
+        "original_sha256": "68e3349550e591e20eb168d74d364814f9ca6f60e80d4ca87531148bc7ddfef3",
+        "original_size_bytes": 2061122,
+        "duration_seconds": 8.041667,
+        "width": 368,
+        "height": 640
+      },
+      "notes": []
+    },
+    {
+      "id": "SC-08",
+      "title": "Improve the animation resolution",
+      "capability": "Upscale",
+      "cli": "video upscale",
+      "mcp": "video_upscale",
+      "prompt": null,
+      "recorded_platform_parameters": {
+        "seed": 731201
+      },
+      "inputs": [
+        {
+          "label": "Restyled animation",
+          "type": "video",
+          "url": "https://media.pixverse.ai/openapi%2F8b34fc5d-24c6-4430-a3cc-e5af132c21e2.mp4",
+          "original_sha256": "68e3349550e591e20eb168d74d364814f9ca6f60e80d4ca87531148bc7ddfef3",
+          "original_size_bytes": 2061122,
+          "duration_seconds": 8.041667,
+          "width": 368,
+          "height": 640
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2F7e581140-529d-4caf-9b57-84d5707e5292.mp4",
+        "original_sha256": "2c3f9f98d36d635ef6caa38fb239897a7f8dacf229438e9a66806083fc0b24f4",
+        "original_size_bytes": 13337254,
+        "duration_seconds": 8.041667,
+        "width": 2134,
+        "height": 3712
+      },
+      "notes": [
+        "This is the original API upscale result, not the locally downscaled 720p derivative."
+      ]
+    },
+    {
+      "id": "SC-09",
+      "title": "Add gentle rain sounds",
+      "capability": "SoundEffect",
+      "cli": "video sound-effect",
+      "mcp": "video_sound_effect",
+      "prompt": "Natural rainfall pattering softly against the window glass and outside on wet ground, gentle rain ambience and a faint breeze in the garden. Continuous realistic sound, no thunder, speech or music.",
+      "recorded_platform_parameters": {
+        "sound_effect_content": "Natural rainfall pattering softly against the window glass and outside on wet ground, gentle rain ambience and a faint breeze in the garden. Continuous realistic sound, no thunder, speech or music.",
+        "original_sound_switch": false,
+        "seed": 631202,
+        "water_mark": false
+      },
+      "inputs": [
+        {
+          "label": "Silent rain-window video",
+          "type": "video",
+          "url": "https://media.pixverse.ai/openapi%2F149ff957-70bb-4549-be32-7f4df892e8f0.mp4",
+          "original_sha256": "bc20dd7f15e2368cf6a72b695ee4b96b03c3b69da104ea3c2c68c18115149038",
+          "original_size_bytes": 5376466,
+          "duration_seconds": 8.041667,
+          "width": 1280,
+          "height": 720
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2Fb15df061-788a-42e0-95a8-98b11b64e20f.mp4",
+        "original_sha256": "4900300ce1748b0f47337fadcdc2207a9c50b92107380fd62c42df428d5a4370",
+        "original_size_bytes": 5449679,
+        "duration_seconds": 8.041667,
+        "width": 1280,
+        "height": 720
+      },
+      "notes": []
+    },
+    {
+      "id": "SC-10",
+      "title": "City street from morning to night",
+      "capability": "MultiTransition",
+      "cli": "video multi-transition",
+      "mcp": "video_multi_transition",
+      "prompt": "Smooth cinematic time lapse of the same city street corner transitioning naturally from morning to golden sunset and then blue hour night. Keep the architecture, street layout and camera angle consistent while the sky and lights gradually change. No cuts, no people, no cars, no text.",
+      "recorded_platform_parameters": {
+        "multi_transition": [
+          {
+            "duration": 5,
+            "prompt": "Smooth cinematic time lapse of the same city street corner transitioning naturally from morning to golden sunset and then blue hour night. Keep the architecture, street layout and camera angle consistent while the sky and lights gradually change. No cuts, no people, no cars, no text."
+          },
+          {
+            "duration": 5,
+            "prompt": "Smooth cinematic time lapse of the same city street corner transitioning naturally from morning to golden sunset and then blue hour night. Keep the architecture, street layout and camera angle consistent while the sky and lights gradually change. No cuts, no people, no cars, no text."
+          },
+          {
+            "prompt": "Smooth cinematic time lapse of the same city street corner transitioning naturally from morning to golden sunset and then blue hour night. Keep the architecture, street layout and camera angle consistent while the sky and lights gradually change. No cuts, no people, no cars, no text."
+          }
+        ],
+        "model": "v5",
+        "quality": "720p",
+        "motion_mode": "normal",
+        "seed": 631401,
+        "water_mark": false
+      },
+      "inputs": [
+        {
+          "label": "Morning frame",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2Fd6a0814f-52d8-4697-a326-4cac1149a76c_0c9389e7336d79557fabbfc0b5131dd2_auto.png",
+          "original_sha256": "5fe45993f97cc499f0d34f69deab0a1c8c17563be6b08554e44afbde885dd8b5",
+          "original_size_bytes": 2755985
+        },
+        {
+          "label": "Sunset frame",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2F1be347e7-4fe1-431a-a62d-f07b01d1f34e_01241b4d76e78e4e4a0c8a94bf473627_auto.png",
+          "original_sha256": "2ee0c121227a21f7c150cf81aea02221dd96ac129d3725a4557ccbe48f0d9184",
+          "original_size_bytes": 2892722
+        },
+        {
+          "label": "Night frame",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2F413057cb-8855-45e5-8a29-193f33c8f39c_5fd0cd0a6cd405ff9cf53dcc702c5f08_auto.png",
+          "original_sha256": "fcee0de5cf72467e478fde3b96edcba41e36513d93f80c1cebfe47c4a56beb65",
+          "original_size_bytes": 2671931
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2F25b363c7-6a48-4f5c-a43f-ef8ea68b9d96.mp4",
+        "original_sha256": "c7aced1b75c292f3befeb33b84eefa8c152fd216ca0bb6466ec81e9ebe88492f",
+        "original_size_bytes": 5612376,
+        "duration_seconds": 9.541992,
+        "width": 1280,
+        "height": 720
+      },
+      "notes": [
+        "The two starting frames each request five seconds; the final frame omits duration. The measured output is shorter than the requested segment total."
+      ]
+    },
+    {
+      "id": "SC-11",
+      "title": "Remove a floor lamp",
+      "capability": "Modify",
+      "cli": "video modify",
+      "mcp": "video_modify",
+      "prompt": "Remove the freestanding floor lamp with the cream shade on the right side of the room throughout the video. Fill the area naturally with the existing plain wall, baseboard and wooden floor. Keep the woman, her walking motion, sofa, table, plants, room lighting and static camera unchanged. Do not remove any other object or add objects, text or logos.",
+      "recorded_platform_parameters": {
+        "quality": "720p",
+        "water_mark": false,
+        "seed": 12345,
+        "prompt": "Remove the freestanding floor lamp with the cream shade on the right side of the room throughout the video. Fill the area naturally with the existing plain wall, baseboard and wooden floor. Keep the woman, her walking motion, sofa, table, plants, room lighting and static camera unchanged. Do not remove any other object or add objects, text or logos."
+      },
+      "inputs": [
+        {
+          "label": "Living-room source video",
+          "type": "video",
+          "url": "https://media.pixverse.ai/openapi%2Fc49e9fc1-f1c2-46e8-ac3b-51bf71652768.mp4",
+          "original_sha256": "765b4a647469737499c64ab30ff64faec09af644492657f3f01f797f05acf677",
+          "original_size_bytes": 2246823,
+          "duration_seconds": 8.041667,
+          "width": 1280,
+          "height": 720
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2F29246b14-ef06-4007-b4a0-dfa66f05ce44.mp4",
+        "original_sha256": "c32639acf12e094e4a9a3dd7bd3af22e7629570b4c19dd222b10a9f712347a96",
+        "original_size_bytes": 5759468,
+        "duration_seconds": 8,
+        "width": 1280,
+        "height": 720
+      },
+      "notes": [
+        "The original request used no reference image or mask."
+      ]
+    },
+    {
+      "id": "SC-12",
+      "title": "Animate a character with a dance reference",
+      "capability": "Mimic",
+      "cli": "video mimic",
+      "mcp": "video_mimic",
+      "prompt": null,
+      "recorded_platform_parameters": {
+        "quality": "720p",
+        "water_mark": false
+      },
+      "inputs": [
+        {
+          "label": "Target character",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2F0825d910-3ae6-4f48-a871-0c92f069f806_46ed42e912199da640160b154340d39b_auto.png",
+          "original_sha256": "566ef8c43acf29dcca03e855a42f873daa16ec0169c216fc2c9080d46dc1dc64",
+          "original_size_bytes": 2534124
+        },
+        {
+          "label": "Dance motion reference",
+          "type": "video",
+          "url": "https://media.pixverse.ai/openapi%2Fc3275115-309e-4bab-a1a2-f8e632428fab.mp4",
+          "original_sha256": "3579b3f8f21a2b5f9b9146cc40b42592fbcd9da72616dd5e7be514b4236741e5",
+          "original_size_bytes": 2076484,
+          "duration_seconds": 8.041667,
+          "width": 720,
+          "height": 1280
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2F2400caae-5c3c-43a1-aa16-62db9157ea99.mp4",
+        "original_sha256": "2801de4899e0f9b31a150127e4bc4a1a4ce0761133a24a95068d89b1806e27f9",
+        "original_size_bytes": 3678559,
+        "duration_seconds": 8.041667,
+        "width": 704,
+        "height": 1280
+      },
+      "notes": [
+        "No prompt was used. The original optional request fields were not fully retained; a response seed is not treated as an explicit request seed."
+      ]
+    },
+    {
+      "id": "SC-13",
+      "title": "A short lifestyle message",
+      "capability": "LipSync",
+      "cli": "video lipsync",
+      "mcp": "video_lipsync",
+      "prompt": null,
+      "recorded_platform_parameters": {
+        "lip_sync_tts_content": "A gentle morning routine can make the whole day feel different. Open the curtains, take a deep breath, and leave a little time for something you love.",
+        "water_mark": false
+      },
+      "inputs": [
+        {
+          "label": "Presenter source video",
+          "type": "video",
+          "url": "https://media.pixverse.ai/openapi%2F5292d2e6-20fc-4cbb-a407-d86920620374.mp4",
+          "original_sha256": "14cbef4397b16e3477c775476999132e1758aa91b38751370c50cd5506f9af64",
+          "original_size_bytes": 5330470,
+          "duration_seconds": 15.041667,
+          "width": 1280,
+          "height": 720
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2F4b6b6edd-3291-41f9-813e-01f974743790.mp4",
+        "original_sha256": "a7a63e1d82ef0674941764859f9a9f9b9b6e78351549b8fbe1dc048ae3a4bd72",
+        "original_size_bytes": 5140155,
+        "duration_seconds": 9.291667,
+        "width": 1280,
+        "height": 720
+      },
+      "notes": [
+        "The original voice was Lyan. Query a currently available voice instead of copying its historical numeric ID."
+      ]
+    },
+    {
+      "id": "SC-14",
+      "title": "A welcoming brand introduction",
+      "capability": "Avatar",
+      "cli": "video avatar",
+      "mcp": "video_avatar",
+      "prompt": "The presenter looks into the camera and speaks naturally with a welcoming expression, gentle small nods, natural blinks and restrained gestures; keep her face unobstructed and preserve the original person, clothing and background.",
+      "recorded_platform_parameters": {
+        "water_mark": false,
+        "lip_sync_tts_content": "大家好，欢迎来到我们的品牌空间。今天想和大家分享一个简单的想法：好的设计，应该自然融入生活，也让每一天多一点从容。接下来，让我们一起看看，这份灵感如何从细节开始。",
+        "prompt": "The presenter looks into the camera and speaks naturally with a welcoming expression, gentle small nods, natural blinks and restrained gestures; keep her face unobstructed and preserve the original person, clothing and background."
+      },
+      "inputs": [
+        {
+          "label": "Presenter image",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2F97428e1f-8bb7-4796-adc0-52b502630d28_eb4efbb4ec17f473072afd67e124734e_auto.png",
+          "original_sha256": "26360196aa63310ffaa772ecf01f639cb35f8a1e2fac4236647699d306fc4469",
+          "original_size_bytes": 1861593
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2Fca3f9b46-fa99-4e3c-9e36-ac4d5b4d6618.mp4",
+        "original_sha256": "845f2cbcdc997133f99e66e18edae52327e1470ca4516551c23f0a7ca0a0f0ae",
+        "original_size_bytes": 4802127,
+        "duration_seconds": 15.6,
+        "width": 1280,
+        "height": 720
+      },
+      "notes": [
+        "The original demo uses Chinese TTS and the historical Jessica Anne Bogart voice. Query a suitable voice on the active connection; the original full request was not retained."
+      ]
+    },
+    {
+      "id": "SC-15",
+      "title": "Replace a corridor character",
+      "capability": "Swap",
+      "cli": "video swap",
+      "mcp": "video_swap",
+      "prompt": null,
+      "recorded_platform_parameters": {
+        "quality": "720p",
+        "seed": 631303,
+        "water_mark": false
+      },
+      "inputs": [
+        {
+          "label": "Corridor source video",
+          "type": "video",
+          "url": "https://media.pixverse.ai/openapi%2F225a364e-2f68-436a-a7b2-cd7f09caaa01.mp4",
+          "original_sha256": "bf636cc07b41cbbf927fc04903beccf772a4b6cc7a54ff732b143df82c20cb0a",
+          "original_size_bytes": 3345530,
+          "duration_seconds": 8.041667,
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "label": "Replacement character",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2Fdac6d26d-023b-41b8-97e8-387c10918137_72f4a17fd5d2e87c014727dd535570b9_auto.png",
+          "original_sha256": "b3fae0b81f5c9bd8e2db3788e9b0983f8680e2b8476279ef75980fb78573ac55",
+          "original_size_bytes": 1913205
+        },
+        {
+          "label": "Historical mask preview",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2F707a0935-683e-4fcb-a349-fc2d805926db_f7b8f400dd1270edce434f329fe0b9c0_auto.png",
+          "original_sha256": "2874077547daed2f42423f3023d6d5b595e505e3559f273d5d8b578f519849d1",
+          "original_size_bytes": 33416
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2Fc9cf5eea-465b-4151-ba70-00989e175451.mp4",
+        "original_sha256": "453ad945eaaba41f23e3a378787693fad3e78a473b9db5d384be1bb122121c10",
+        "original_size_bytes": 2739771,
+        "duration_seconds": 8.041667,
+        "width": 1280,
+        "height": 720
+      },
+      "notes": [
+        "The mask image is a historical visual reference only. Run Mask Selection on the same newly uploaded source video and use its actual returned keyframe and mask IDs."
+      ]
+    },
+    {
+      "id": "SC-16",
+      "title": "Midnight Haunts music video",
+      "capability": "Agent",
+      "cli": "agent mv",
+      "mcp": "agent_mv",
+      "prompt": "A playful spooky Halloween music video featuring the reference character and a moonlit ghost parade.",
+      "recorded_platform_parameters": {
+        "mv_agent_type": "vibe_mv_v3_custom",
+        "mv_style": "Midnight Haunts",
+        "music_style": "",
+        "mv_prompt": "A playful spooky Halloween music video featuring the reference character and a moonlit ghost parade.",
+        "lyric_text": "Little ghosts in moonlit streets\nDancing on their silent feet\nMidnight haunts are here to play\nLaugh and chase the dark away",
+        "lip_sync_switch": true,
+        "preserve_outfit": true,
+        "caption_switch": false,
+        "instrumental_switch": false,
+        "quality": "720p",
+        "aspect_ratio": "9:16",
+        "seed": 20261030,
+        "water_mark": false
+      },
+      "inputs": [
+        {
+          "label": "Character reference",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2Fc40a2ad3-97c6-4077-aa49-9545a1576105_5c06cd2cbbeb139efcb7ff5ab24e0068_auto.png",
+          "original_sha256": "eb323fbb0527de81c84ae093501a9ea514081beea12923424b9f5969740a0d12",
+          "original_size_bytes": 2462776
+        },
+        {
+          "label": "Music clip",
+          "type": "audio",
+          "url": "https://media.pixverse.ai/openapi%2F8aa72df8-0fb5-4a95-9a48-09bfd9671a65.mp3",
+          "original_sha256": "758667b6d344ffad9fee589e947ea46a4255f69a32d556f4d3ae73ea1771b8d9",
+          "original_size_bytes": 961604,
+          "duration_seconds": 40
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2Fa4a8113a-572c-45cd-8b34-9ea9c2f98d0a.mp4",
+        "original_sha256": "5affecaa73c37116e9168dd78ca33a491a830e194b888181743aa69e0489409e",
+        "original_size_bytes": 8807973,
+        "duration_seconds": 40,
+        "width": 720,
+        "height": 1280
+      },
+      "notes": [
+        "V3 Custom music video. Audio verification is asynchronous; no separate verification tool is required. Style availability is validated by Platform."
+      ]
+    },
+    {
+      "id": "SC-17",
+      "title": "A presenter introduces a crossbody bag",
+      "capability": "Agent",
+      "cli": "agent ecommerce-native",
+      "mcp": "agent_ecommerce_native",
+      "prompt": "Create a 15-second contemporary fashion advertisement featuring the supplied female presenter and the exact cognac-brown leather crossbody bag from the product image. Start with the presenter introducing the bag in a naturally lit apartment, cut to clear close-ups of its curved flap, stitching and brass clasp, then show her wearing the same bag across her body as she walks outdoors. End with a composed hero shot of the bag. Keep the presenter's face and clothing consistent and preserve the bag's shape, color, single strap and hardware across shots. Use elegant camera movement, believable handling, concise natural English narration and readable English captions. Do not invent brands, prices, logos or unsupported material claims.",
+      "recorded_platform_parameters": {
+        "agent_id": 414562414124107,
+        "duration": 15,
+        "quality": "720p",
+        "aspect_ratio": "16:9",
+        "language_code": "en-US",
+        "lip_sync_switch": true,
+        "bgm_switch": true,
+        "caption_switch": true,
+        "img_references": [
+          {
+            "ref_name": "product"
+          }
+        ],
+        "prompt": "Create a 15-second contemporary fashion advertisement featuring the supplied female presenter and the exact cognac-brown leather crossbody bag from the product image. Start with the presenter introducing the bag in a naturally lit apartment, cut to clear close-ups of its curved flap, stitching and brass clasp, then show her wearing the same bag across her body as she walks outdoors. End with a composed hero shot of the bag. Keep the presenter's face and clothing consistent and preserve the bag's shape, color, single strap and hardware across shots. Use elegant camera movement, believable handling, concise natural English narration and readable English captions. Do not invent brands, prices, logos or unsupported material claims."
+      },
+      "inputs": [
+        {
+          "label": "Product image",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2F123d96e0-3699-4ce1-aad3-dabe4c75dac1_f4b175fa5baeda26a5b75c96d812fa77_auto.png",
+          "original_sha256": "518bf96685def48710fa073832f616bd72e2eacd9381c6042f3670a7e13aaa4f",
+          "original_size_bytes": 2243922
+        },
+        {
+          "label": "Presenter image",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2F405629b4-2fbe-4899-9e5d-f32d8e2f13c1_a91291bd391b8f757ab95e5019cfa8b4_auto.png",
+          "original_sha256": "a92d165f12a4a2ea2adfa269735719cbf69eca1cc2ffd639e879ecf99a91154c",
+          "original_size_bytes": 1955611
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2F4972f6aa-3b50-4505-a1a9-113be116ae07.mp4",
+        "original_sha256": "0a999160907ceb8af2741af064d7bdb1513cecf5f05f45f4773241685c554909",
+        "original_size_bytes": 2925486,
+        "duration_seconds": 15.066666,
+        "width": 1280,
+        "height": 720
+      },
+      "notes": [
+        "Use the presenter image for the avatar input and the bag image for the product reference.",
+        "No seed, watermark, video references, or webhook was supplied in the recorded request."
+      ]
+    },
+    {
+      "id": "SC-18",
+      "title": "A crossbody bag ad without a visible presenter",
+      "capability": "Agent",
+      "cli": "agent ecommerce-template",
+      "mcp": "agent_ecommerce_template",
+      "prompt": "Create a 15-second contemporary fashion advertisement for the exact cognac-brown leather crossbody bag in the product image. Present the bag without any visible face or identifiable person; hands or cropped body may demonstrate it, with off-camera narration. Use a naturally lit apartment, clear close-ups of the curved flap, stitching and brass clasp, and a lifestyle view showing the bag worn across the body. End with a composed hero shot. Preserve the bag's shape, color, single strap and hardware across shots. Use elegant camera movement, believable handling, concise natural English narration and readable English captions. Do not invent brands, prices, logos or unsupported material claims.",
+      "recorded_platform_parameters": {
+        "agent_id": 414562414124108,
+        "duration": 15,
+        "quality": "720p",
+        "aspect_ratio": "16:9",
+        "language_code": "en-US",
+        "lip_sync_switch": true,
+        "bgm_switch": true,
+        "caption_switch": true,
+        "img_references": [
+          {
+            "ref_name": "product"
+          }
+        ],
+        "prompt": "Create a 15-second contemporary fashion advertisement for the exact cognac-brown leather crossbody bag in the product image. Present the bag without any visible face or identifiable person; hands or cropped body may demonstrate it, with off-camera narration. Use a naturally lit apartment, clear close-ups of the curved flap, stitching and brass clasp, and a lifestyle view showing the bag worn across the body. End with a composed hero shot. Preserve the bag's shape, color, single strap and hardware across shots. Use elegant camera movement, believable handling, concise natural English narration and readable English captions. Do not invent brands, prices, logos or unsupported material claims.",
+        "video_style": "no_personal_review"
+      },
+      "inputs": [
+        {
+          "label": "Product image",
+          "type": "image",
+          "url": "https://media.pixverse.ai/openapi%2F123d96e0-3699-4ce1-aad3-dabe4c75dac1_f4b175fa5baeda26a5b75c96d812fa77_auto.png",
+          "original_sha256": "518bf96685def48710fa073832f616bd72e2eacd9381c6042f3670a7e13aaa4f",
+          "original_size_bytes": 2243922
+        }
+      ],
+      "output": {
+        "label": "Original example output",
+        "type": "video",
+        "url": "https://media.pixverse.ai/openapi%2F0b6fe0d9-74fc-43a2-bcac-2c1da703239f.mp4",
+        "original_sha256": "674fb64f37ab24f79e61d5dc5562b770235bd12086687b010ef901b8e3d499ea",
+        "original_size_bytes": 3431081,
+        "duration_seconds": 15.066666,
+        "width": 1280,
+        "height": 720
+      },
+      "notes": [
+        "No seed, watermark, video references, or webhook was supplied in the recorded request."
+      ]
+    }
+  ],
+  "template_case": null,
+  "parameter_scope": "Historical Platform fields with account-bound IDs omitted. Upload input URLs to the active account and map settings through the installed CLI help or connected MCP schema."
+}
