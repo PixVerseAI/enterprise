@@ -66,7 +66,7 @@ Text only; no input media.
 
 ### Original example video
 
-<video controls src="https://media.pixverse.ai/openapi%2F15d6be23-046c-4efe-ba25-67eec1b2f497.mp4" width="640"></video>
+https://github.com/user-attachments/assets/b3691e2e-10b8-405c-8b42-ac06ae758a4f
 
 ## SC-02 Lakeside camping coffee
 
