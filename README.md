@@ -4,6 +4,12 @@ English | [简体中文](README.zh-CN.md)
 
 Create and edit videos with PixVerse through a command-line client, remote MCP, and a shared skill for AI assistants.
 
+## Make videos with OpenCode
+
+Watch how to install the CLI and skill, then make videos from a text prompt, a photo, or multiple reference images (2:32).
+
+https://github.com/user-attachments/assets/3c4c28e3-a026-4cbd-ba4a-ad8a508bfd25
+
 ## Overview
 
 - Generate videos from text, images, first/last frames, or multiple references.
