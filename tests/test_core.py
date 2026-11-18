@@ -45,17 +45,35 @@ def test_legacy_region_environment_is_ignored(legacy, monkeypatch):
 
 @pytest.mark.parametrize("key", ["", " ", "a b", "a\nb", "中文"])
 def test_key_validation(key, monkeypatch):
-    monkeypatch.setenv("PIXVERSE_API_KEY", key)
-    with pytest.raises(ConfigurationError, match="PIXVERSE_API_KEY"):
+    monkeypatch.setenv("PIXVERSE_OPENAPI_KEY", key)
+    with pytest.raises(ConfigurationError, match="PIXVERSE_OPENAPI_KEY"):
         Config.from_env()
 
 
 def test_no_configuration_fallback(monkeypatch):
-    monkeypatch.delenv("PIXVERSE_API_KEY")
+    monkeypatch.delenv("PIXVERSE_OPENAPI_KEY")
     monkeypatch.setenv("PIX_CN_OPENAPI_API_KEY_PROD", "synthetic-legacy")
     with pytest.raises(ConfigurationError):
         Config.from_env()
     assert "synthetic-test-key" not in repr(Config("cn", "synthetic-test-key"))
+
+
+@pytest.mark.parametrize("region", ["cn", "global"])
+def test_balance_uses_only_openapi_key(region, monkeypatch, invoke):
+    monkeypatch.setenv("PIXVERSE_API_KEY", "synthetic-obsolete-key")
+    result, requests = invoke(["--json", "account", "balance"], region=region)
+    assert result.exit_code == 0
+    assert len(requests) == 1
+    assert requests[0].headers["API-KEY"] == "synthetic-test-key"
+    assert str(requests[0].url).startswith(PRODUCTION_URLS[region] + "/")
+
+    monkeypatch.delenv("PIXVERSE_OPENAPI_KEY")
+    result, requests = invoke(["--json", "account", "balance"], region=region)
+    assert result.exit_code == 2
+    assert json.loads(result.output)["error"]["type"] == "configuration"
+    assert "PIXVERSE_OPENAPI_KEY" in result.output
+    assert "synthetic-obsolete-key" not in result.output
+    assert not requests
 
 
 @pytest.mark.parametrize(

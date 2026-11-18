@@ -244,7 +244,11 @@ def register_workflows(root, video, media, action):
     )
     @action
     def fusion(client, img_id, image_ref, video_ref, reference_mode, aspect_ratio, **kwargs):
-        """多参考融合，支持 V6 Omni 图片/视频引用。"""
+        """Combine image references, or images and videos with V6 Omni.
+        For a role-specific request, give each referenced asset a ref_name with
+        --image-ref or --video-ref. End each @name with a space or the end of
+        the prompt. For example, use --prompt '@person wears @jacket and walks along @trail'
+        """
         if img_id and image_ref:
             raise ValueError("--img-id 和 --image-ref 不可同时使用。")
         images = [reference(raw, "image") for raw in image_ref] or [{"img_id": i} for i in img_id]

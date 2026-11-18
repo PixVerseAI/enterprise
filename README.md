@@ -34,7 +34,7 @@ python3 scripts/install.py
 pixverse-api --help
 ```
 
-Provide your API key through `PIXVERSE_API_KEY` in your local environment, then check your balance:
+Provide your API key through `PIXVERSE_OPENAPI_KEY` in your local environment, then check your balance:
 
 ```bash
 pixverse-api --json account balance

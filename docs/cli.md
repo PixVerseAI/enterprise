@@ -6,7 +6,7 @@
 
 The command is `pixverse-api`. Install the CLI and shared skill with `python3 scripts/install.py`; see the [installation guide](installation.md) for prerequisites and client directories.
 
-Provide the account's production API key through `PIXVERSE_API_KEY` in your environment or secret manager. The CLI does not load `.env` files or skill credentials. Keep keys out of command arguments, chat, and source control.
+Provide the account's production API key through `PIXVERSE_OPENAPI_KEY` in your environment or secret manager. The CLI does not load `.env` files or skill credentials. Keep keys out of command arguments, chat, and source control.
 
 The root option `--region global|cn` selects the production API; `global` is the default. There is no region environment variable. Use the endpoint documented by your chosen README, and keep the key, asset IDs, and task IDs associated with that endpoint and account. Arbitrary API base URLs, redirects, and implicit proxies are not supported.
 
@@ -42,11 +42,17 @@ pixverse-api media upload --url https://example.com/audio.wav
 pixverse-api video generate --prompt "A cat walking through a meadow" --no-audio
 pixverse-api video from-image --img-id 11 --prompt "The subject walks forward"
 pixverse-api video f2v --first-frame-img 11 --last-frame-img 12 --prompt "Day turns to night"
-pixverse-api video fusion --img-id 11 --img-id 12 --prompt "The subjects interact"
+pixverse-api video fusion \
+  --image-ref '{"img_id":11,"ref_name":"person"}' \
+  --image-ref '{"img_id":12,"ref_name":"jacket"}' \
+  --image-ref '{"img_id":13,"ref_name":"trail"}' \
+  --prompt '@person wears @jacket and walks along @trail'
 pixverse-api --json video get --id 21
 ```
 
 I2V accepts an optional prompt of up to 5000 characters; the aspect ratio follows the image. Fusion supports repeated `--img-id` or `--image-ref` JSON objects with `img_id` and optional `type` and `ref_name`. V6 Omni also supports `--video-ref` and `--aspect-ratio auto`. Each video reference uses one video source and an optional `ref_name`.
+
+For requests like “have him wear this jacket,” use the uploaded IDs for the corresponding assets and refer to each by its exact name in the prompt. A space or the end of the prompt terminates a mention. For example, write `At @trail , @person wears @jacket`. A generic prompt that doesn't assign roles can still use unnamed references.
 
 An omitted Fusion duration is not sent; explicit values, including zero, are preserved. Use positive seconds for image mode and zero for Omni video mode. Platform validates the actual model/material combination, reference counts, and names.
 

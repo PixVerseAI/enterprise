@@ -34,7 +34,7 @@ python3 scripts/install.py
 pixverse-api --help
 ```
 
-在本地环境中设置 API Key 变量 `PIXVERSE_API_KEY`，然后查询余额：
+在本地环境中设置 API Key 变量 `PIXVERSE_OPENAPI_KEY`，然后查询余额：
 
 ```bash
 pixverse-api --region cn --json account balance

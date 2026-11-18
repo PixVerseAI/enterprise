@@ -66,7 +66,9 @@ def _resolve_cli(name):
     ],
 )
 def test_installed_help_without_credentials(args):
-    env = {k: v for k, v in os.environ.items() if k not in ("PIXVERSE_REGION", "PIXVERSE_API_KEY")}
+    env = dict(os.environ)
+    env.pop("PIXVERSE_OPENAPI_KEY", None)
+    env.pop("PIXVERSE_REGION", None)
     result = subprocess.run(
         _resolve_cli("pixverse-api") + args, env=env, capture_output=True, text=True
     )
@@ -74,10 +76,9 @@ def test_installed_help_without_credentials(args):
     assert result.stdout and not result.stderr
 
 
-@pytest.mark.parametrize("missing", ["PIXVERSE_API_KEY"])
-def test_missing_configuration_is_json(missing):
+def test_missing_configuration_is_json():
     env = dict(os.environ)
-    env.pop(missing, None)
+    env.pop("PIXVERSE_OPENAPI_KEY", None)
     result = subprocess.run(
         _resolve_cli("pixverse-api") + ["--json", "account", "balance"],
         env=env,
@@ -85,7 +86,18 @@ def test_missing_configuration_is_json(missing):
         text=True,
     )
     assert result.returncode == 2 and not result.stdout
-    assert missing in json.loads(result.stderr)["error"]["message"]
+    assert "PIXVERSE_OPENAPI_KEY" in json.loads(result.stderr)["error"]["message"]
+
+
+def test_installed_validation_redacts_openapi_key():
+    key = "synthetic-validation-key"
+    result = subprocess.run(
+        [*_resolve_cli("pixverse-api"), "--json", "--region", key, "account", "balance"],
+        env={**os.environ, "PIXVERSE_OPENAPI_KEY": key}, capture_output=True, text=True,
+    )
+    assert result.returncode == 2
+    assert key not in result.stdout + result.stderr
+    assert "[REDACTED]" in json.loads(result.stderr)["error"]["message"]
 
 
 @pytest.mark.parametrize(
@@ -331,7 +343,7 @@ runpy.run_path(sys.argv[0], run_name='__main__')
         "field": field,
         "value": value,
     }
-    env = {**os.environ, "PIXVERSE_API_KEY": "synthetic-test-key"}
+    env = {**os.environ, "PIXVERSE_OPENAPI_KEY": "synthetic-test-key"}
     result = subprocess.run(
         [
             sys.executable,
@@ -465,7 +477,7 @@ finally:
             "--json",
             *args,
         ],
-        env={**os.environ, "PIXVERSE_API_KEY": "synthetic-test-key"},
+        env={**os.environ, "PIXVERSE_OPENAPI_KEY": "synthetic-test-key"},
         capture_output=True,
         text=True,
     )

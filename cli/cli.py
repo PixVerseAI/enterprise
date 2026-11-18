@@ -11,7 +11,7 @@ import click
 from . import __version__
 from .catalog import register_catalog
 from .client import APIError, PlatformClient, redact
-from .config import Config, ConfigurationError
+from .config import API_KEY_ENV, Config, ConfigurationError
 from .execution import execute_operation, failure_context
 from .protocol import InputError
 from .workflows import register_workflows, webhook
@@ -112,7 +112,7 @@ def action(fn):
 def cli(ctx, region, json_output, timeout):
     """统一的国内/海外 Platform CLI，仅连接生产 API。
 
-    先设置 PIXVERSE_API_KEY；使用 --region 选择地区，默认 global。
+    先设置 PIXVERSE_OPENAPI_KEY；使用 --region 选择地区，默认 global。
     """
     if not math.isfinite(timeout):
         raise click.BadParameter("必须是有限正数。", param_hint="--timeout")
@@ -254,7 +254,7 @@ def main():
             sys.exit(code)
     except click.ClickException as exc:
         # Click 参数错误也避免将可能误填的 Key/URL 直接回显。
-        key = os.environ.get("PIXVERSE_API_KEY", "")
+        key = os.environ.get(API_KEY_ENV, "")
         if not isinstance(exc, CommandError):
             detail = {"type": "validation", "message": redact(exc.message, key),
                       "code": "INVALID_ARGUMENT", "fields": []}

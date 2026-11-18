@@ -4,7 +4,7 @@ Use the installed `pixverse-api`. Check its version and the required subcommand'
 
 ## Configuration and command format
 
-- The current CLI uses `PIXVERSE_API_KEY`, supplied by the user or launcher. Do not read, copy, or output the key. Do not assume the MCP client's variables or headers have been forwarded to the CLI.
+- Both the CLI and MCP use `PIXVERSE_OPENAPI_KEY`. Provide the selected service's key in the environment of the process running the CLI. Do not read, copy, or output the key.
 - The root option `--region global|cn` selects the production API and defaults to `global`. The CLI does not read a region environment variable. Honor the region selected by the user or established for the current task; do not switch because another connection failed.
 - Put `--region`, `--json`, and `--timeout` before the subcommand. Use `--json` for structured results. Successful output goes to stdout and errors to stderr. Exit code 2 indicates a configuration/input error; 1 indicates a request error or a terminal task failure.
 - The bundled `cli/skills/SKILL.md` (`pixverse-api-cli`) contains CLI-specific guidance, not MCP instructions. Subcommand `--help` remains sufficient to inspect the installed command contract without that file.
@@ -22,6 +22,20 @@ Use the installed `pixverse-api`. Check its version and the required subcommand'
 | Video effect templates | `template list`, `template generate`, `template get` |
 | Ecommerce and music videos | `agent ecommerce-native`, `agent ecommerce-template`, `agent mv` |
 | Ordinary video task queries | `video get` |
+
+## Fusion with named assets
+
+Use one `--image-ref` JSON object per named image. Put the upload's actual `img_id` and its `ref_name` (without `@`) in the same object. For a motion reference, `--video-ref` takes the supported video source and its name. Use the names in the prompt wherever the user refers to those assets.
+
+```sh
+pixverse-api video fusion \
+  --image-ref '{"img_id":11,"ref_name":"person"}' \
+  --image-ref '{"img_id":12,"ref_name":"jacket"}' \
+  --image-ref '{"img_id":13,"ref_name":"trail"}' \
+  --prompt '@person wears @jacket and walks along @trail'
+```
+
+These IDs illustrate the mapping. For a draft, use the IDs the user supplied or label missing IDs as placeholders. Submit only when the user asks for generation.
 
 ## Parameters and results
 

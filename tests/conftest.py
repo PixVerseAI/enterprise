@@ -10,7 +10,8 @@ from cli.client import PlatformClient
 def isolated_credentials(monkeypatch):
     # 测试不加载用户配置；只使用明确的合成值。
     monkeypatch.delenv("PIXVERSE_REGION", raising=False)
-    monkeypatch.setenv("PIXVERSE_API_KEY", "synthetic-test-key")
+    monkeypatch.delenv("PIXVERSE_API_KEY", raising=False)
+    monkeypatch.setenv("PIXVERSE_OPENAPI_KEY", "synthetic-test-key")
 
     def forbid_network(*args, **kwargs):
         raise AssertionError("离线测试禁止真实网络。请使用 MockTransport。")

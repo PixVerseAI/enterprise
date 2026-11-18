@@ -7,7 +7,7 @@ description: Use the pixverse-api CLI to upload assets, query balances, generate
 
 This file is the command guide bundled with the CLI package. The repository's shared `pixverse-api` skill provides business guidance for both CLI and MCP. When installing a skill for an AI assistant, install the complete shared skill directory, including its references.
 
-Use the installed `pixverse-api`. The root option `--region global|cn` selects the production API and defaults to `global`; the CLI does not read a region environment variable. Supply the API key only through `PIXVERSE_API_KEY`. Users configure credentials in their runtime environment. Do not read authentication files, print keys, or put keys in command arguments or documents. Use resources belonging to the same region and account.
+Use the installed `pixverse-api`. The root option `--region global|cn` selects the production API and defaults to `global`; the CLI does not read a region environment variable. Supply the API key only through `PIXVERSE_OPENAPI_KEY`. Users configure credentials in their runtime environment. Do not read authentication files, print keys, or put keys in command arguments or documents. Use resources belonging to the same region and account.
 
 Read the subcommand's `--help` first. Put global `--region`, `--json`, and `--timeout` options before the subcommand. Successful JSON goes to stdout and errors to stderr. Exit code 2 means a configuration/input error; 1 means a request error or terminal task failure.
 
@@ -33,6 +33,8 @@ Read the subcommand's `--help` first. Put global `--region`, `--json`, and `--ti
 Provide exactly one video source: `--source-video-id` or `--video-media-id`. Mask keyframe-id is optional; do not inject a default frame. Mask selection returns a synchronous result, not a video_id. Swap uses the same source video and the keyframe_id and string mask_id from the same mask response. Preserve the order of repeated `--mask-id` and `--img-id` options for Modify. Mask IDs require an explicit keyframe-id.
 
 Fusion accepts repeated `--img-id` values or repeated `--image-ref` JSON objects with img_id/type/ref_name. Use `--video-ref` for video references. V6 Omni and aspect-ratio=auto are supported. Supply positive seconds for image mode and 0 for Omni video mode; omitted duration is not injected. Platform validates model combinations, reference counts, and names.
+
+When the user describes how specific assets should interact, use named references and rewrite those asset mentions in the prompt. For a person, jacket, and trail, pass the corresponding IDs with `ref_name` values `person`, `jacket`, and `trail`, and send `@person wears @jacket and walks along @trail`. Keep explicit names and creative details. Separate each mention from following punctuation with a space.
 
 MV accepts at most one character image and one style image. Style images apply only to Custom, which requires at least one reference image. The server validates new styles; do not substitute an outdated enum for the user's selection. A lyrics file has the form `{"words":[{"start":0,"end":0.5,"word":"Hello"}]}`. start/end must be finite nonnegative numbers. Platform validates ordering, non-overlap, word counts, and alignment with the actual audio duration. Explicit `--no-caption`, `--no-lip-sync`, and `--no-preserve-outfit` preserve false.
 
