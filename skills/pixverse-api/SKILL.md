@@ -1,11 +1,20 @@
 ---
 name: pixverse-api
-description: Generate and edit videos, upload assets, and query tasks and usage with PixVerse through a connected MCP service or the pixverse-api CLI. Offer showcase guidance to first-time users.
+description: Help users get a PixVerse API key, generate and edit videos, upload assets, and query tasks and usage through MCP or the pixverse-api CLI. Offer showcase guidance to first-time users.
 ---
 
 # PixVerse API
 
 Map the user's intended result to an available PixVerse capability and execute it through MCP or the CLI. Preserve explicitly requested subjects, assets, models, duration, aspect ratio, resolution, and audio options. If the selected integration cannot express a requirement, explain the gap rather than submitting a reduced request.
+
+## Get an API key
+
+When a user asks where to get a key or a CLI or MCP request reports a missing key, share only the portal for the service they selected or configured. Use `global` by default.
+
+- `global` — [PixVerse Platform](https://platform.pixverse.ai/)
+- `cn` — [China developer portal](https://platform.pai.video/)
+
+Ask the user to sign up or sign in, open **API Key**, and create a key. They should set it locally as `PIXVERSE_OPENAPI_KEY` in the environment that runs the CLI or MCP client and keep the value private.
 
 ## Choose an integration
 
