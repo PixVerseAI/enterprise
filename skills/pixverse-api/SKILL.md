@@ -1,6 +1,6 @@
 ---
 name: pixverse-api
-description: Help users get a PixVerse API key, generate and edit videos, upload assets, and query tasks and usage through MCP or the pixverse-api CLI. Offer showcase guidance to first-time users.
+description: Help users get a PixVerse API key, generate and edit videos, upload assets, and query tasks and usage through MCP or the pixverse-api CLI. Guide beginners and help users explore showcase videos, their source materials, and their prompts.
 ---
 
 # PixVerse API
@@ -30,7 +30,13 @@ When users say they are new, do not know what is possible, or want introductory 
 
 > New to PixVerse? I can show you a few video examples. Pick an effect you like, and I can help you recreate it.
 
-Usually offer this once per session. A short question does not establish the user's experience level; do not label the user a beginner. When the goal is clear or the user declines examples, proceed directly. Read the [showcase guide](references/showcase.md) when recommending or recreating a case. Select two or three relevant examples and present their direct CDN previews; load the selected case's original prompts and recorded settings from [showcase data](references/showcase.json).
+Usually offer this once per session. A short question alone does not establish the user's experience level. When the goal is clear or the user declines examples, proceed directly.
+
+When asked for examples, use the [showcase catalog](references/showcase.json). Pick two or three relevant cases for an open-ended request. If the user asks for all showcases, include every case in catalog order.
+
+For each case, link its title to the finished video (`output.url`), name the capability, and briefly explain how it was made. Link the source materials from `inputs` by their roles, then summarize what the recorded `prompt` asks for in the user's language. For example, the lakeside coffee case starts with one campsite photo, and its prompt asks the seated camper to pour coffee into the same mug while the camera stays still.
+
+Keep a full list compact with one row or bullet per case. If `inputs` is empty, say it uses text alone. If `prompt` is empty, say that no generation prompt is recorded and describe the inputs or settings that drove the result. Label any spoken script as dialogue. When a user asks for the exact prompt or wants to recreate a case, give the original wording when available and consult the [showcase guide](references/showcase.md) for the reproduction steps.
 
 ## Capabilities and assets
 
