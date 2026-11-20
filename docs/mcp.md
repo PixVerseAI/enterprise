@@ -4,7 +4,7 @@
 
 ## Connection and authentication
 
-Use the endpoint in your selected README with an MCP client supporting **Streamable HTTP** and custom headers. This is not a local stdio server or the legacy HTTP+SSE transport. No CLI installation is required.
+Run `python3 scripts/install_mcp.py` from a clone to configure remote MCP and install the original shared skill together. It defaults to `global`, independently of prompt language. An explicit China service request uses `--region cn`; follow the [installation guide](installation.md#install-mcp-and-skill-only) for service selection and DeepSeek profiles. This is **Streamable HTTP**, not a local stdio server or the legacy HTTP+SSE transport. No CLI installation is required.
 
 The client sends `Authorization: Bearer <API key>` on requests. Provide the key through `PIXVERSE_OPENAPI_KEY` in the client process's environment or the client's supported secret store. This service uses API key authentication without OAuth sign-in.
 
@@ -35,7 +35,7 @@ Client configuration is not a universal MCP standard. In particular:
 
 Variable expansion happens in the client. The variable must exist in that process before startup; a variable in an interactive shell is not necessarily available to a desktop app. Reloading a configuration file does not populate a missing process environment. In Pi, `/reload` applies configuration changes; reconnect after service updates to refresh cached declarations.
 
-Preserve existing servers when adding a connection. Install the shared skill with `python3 scripts/install_skill.py`; see the [installation guide](installation.md) for directories and new-session checks. Never put real keys in committed JSON or tool business arguments.
+The installer preserves unrelated settings and configures the native client format; the JSON above is a manual Pi example, not a universal configuration. Do not handwrite a replacement skill or leave a DeepSeek patch unregistered. See the [installation guide](installation.md) for directories and new-session checks. Never put real keys in committed JSON or tool business arguments.
 
 ## Verify the connection
 

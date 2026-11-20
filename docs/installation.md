@@ -57,15 +57,27 @@ Directory references: [CodeBuddy directories](https://www.codebuddy.ai/docs/cli/
 
 ## Install MCP and skill only
 
-Configure the hosted service using the [MCP guide](mcp.md), then install the complete shared skill:
+Clone this repository and run the MCP-only installer. It configures the current client and installs the **complete repository-original** `pixverse-api` skill in one operation:
 
 ```bash
-python3 scripts/install_skill.py
+python3 scripts/install_mcp.py
+# DeepSeek: select the profile actually running this session.
+python3 scripts/install_mcp.py --client deepseek --profile headless
+# Explicit China service selection, in any prompt language:
+python3 scripts/install_mcp.py --region cn
 ```
 
-This command does not install the CLI. It accepts `--client`, `--skills-dir`, and `--replace` with the same meanings as above. Add `--detect` to inspect client and directory detection without installing the skill.
+This command does not install the CLI, read an API key, or call business APIs. It accepts `--client` and `--replace`; review conflicting existing settings before replacement. The original five skill files are copied and checked, not synthesized by the assistant. `scripts/install_skill.py` remains available when only the skill is needed, including manually configured clients.
+
+Endpoint choice is explicit and language-independent. With no service selection, use `global` (`https://app-api.pixverse.ai/opanapi/mcp`). Use `--region cn` for an explicit China request or when explicitly following the Chinese README's service setup (`https://app-api.pixverseai.cn/opanapi/mcp`). Do not infer the service from Chinese/English text, locale, or model provider. Supply the selected service's key through `PIXVERSE_OPENAPI_KEY`. Rerunning with another region updates the `pixverse` connection; do not add a second enabled alias or retry another region after authentication failure.
+
+WorkBuddy writes `$CODEBUDDY_CONFIG_DIR/.mcp.json` (default `~/.codebuddy/.mcp.json`), not the model directory. Pi writes `$PI_CODING_AGENT_DIR/mcp.json`. OpenCode uses the explicit `$OPENCODE_CONFIG` file when set, otherwise its native global configuration under `$XDG_CONFIG_HOME/opencode/`, with its installed major version's MCP structure. Its skill directory remains under `$XDG_CONFIG_HOME/opencode/skills/` even when the configuration file is elsewhere. DeepSeek adds an `insert` entry to `$DSH_HOME/profiles/<profile>/cordis.patch.yml`; a bare id override does not register a new plugin. Existing unrelated settings are retained. Unsupported JSONC or conflicting profile entries stop with an error instead of silently overwriting them.
 
 Preserve existing client settings when adding MCP. Configure the endpoint and credentials using the client's supported HTTP fields and environment-variable syntax. A successful connection and tool discovery do not verify API authentication; use a balance query when authorized.
+
+## Installation telemetry
+
+The CLI and MCP installers attempt to send one installation report to PixVerse Platform in the background after every installation attempt. Platform forwards the report to Sensors Analytics. The report includes the installer version, a random attempt ID, the integration (`cli` or `mcp`), the detected client category, the action, the outcome, the elapsed time, and applicable CLI version, PATH status, skill status, MCP region, or fixed error code. Reports omit credentials, paths, and raw installer output. Delivery failures do not change the installation result. The standalone skill installer sends no report.
 
 ## Verify a new session
 

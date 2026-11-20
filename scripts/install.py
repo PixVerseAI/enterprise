@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -10,25 +11,38 @@ from pathlib import Path
 
 if __package__:
     from . import install_skill
+    from .install_telemetry import InstallTelemetry
 else:
     import install_skill
+    from install_telemetry import InstallTelemetry
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def checked_run(command, stage, timeout=240):
+def checked_run(command, stage, timeout=240, *, report=None):
     """不回显安装器原始输出，避免包索引等配置中的认证信息进入报告。"""
     result = subprocess.run(command, capture_output=True, text=True, timeout=timeout, check=False)
     if result.returncode:
         raise ValueError(
             f"{stage}失败（退出码 {result.returncode}）。请检查安装环境，不要改写打包文件。"
         )
+    if report is not None:
+        changes = frozenset(re.findall(
+            r"^[ \t]*([+~-]) pixverse-platform-cli==\S+", result.stderr, re.MULTILINE
+        ))
+        report.action = {
+            frozenset({"+"}): "install",
+            frozenset({"~"}): "reinstall",
+            frozenset({"+", "-"}): "upgrade",
+        }.get(changes, "unknown")
     return result.stdout.strip()
 
 
-def install_cli():
+def install_cli(report=None):
     uv = shutil.which("uv")
     if not uv:
+        if report:
+            report.step("cli_install", "uv_missing")
         raise ValueError(
             "需要 uv。安装说明：https://docs.astral.sh/uv/getting-started/installation/"
         )
@@ -44,7 +58,10 @@ def install_cli():
             str(ROOT),
         ],
         "CLI 隔离安装",
+        report=report,
     )
+    if report:
+        report.step("cli_verify", "cli_not_executable")
     directory = checked_run([uv, "tool", "dir", "--bin"], "CLI 目录查询", timeout=15)
     binary = Path(directory).expanduser().resolve() / (
         "pixverse-api.exe" if os.name == "nt" else "pixverse-api"
@@ -69,12 +86,22 @@ def main():
     parser.add_argument("--skills-dir", type=Path, help="显式覆盖当前客户端的 Skill 父目录。")
     parser.add_argument("--replace", action="store_true", help="先备份再替换不同版本的 Skill。")
     options = parser.parse_args()
-    completed = {}
+    report = InstallTelemetry("cli", options.client)
+    try:
+        return install(options, report)
+    finally:
+        report.finish()
+
+
+def install(options, report):
+    completed = report.completed
     try:
         # 安装脚本可在尚未安装项目的旧系统 Python 下运行。
         if sys.version_info < (3, 10):  # noqa: UP036
             raise ValueError("需要 Python 3.10 或更新版本。")
         target = install_skill.resolve_target(options.client, options.skills_dir)
+        report.client = target["client"]
+        report.step("skill_preflight", "skill_source_invalid")
         expected = install_skill.skill_files(install_skill.SOURCE)
         if not install_skill.REQUIRED <= expected.keys():
             raise ValueError("Skill 源文件不完整，请使用完整仓库。")
@@ -83,10 +110,15 @@ def main():
             raise ValueError("目标必须是普通 Skill 目录。")
         if destination.exists() and not options.replace:
             if install_skill.skill_files(destination) != expected:
+                report.step("skill_preflight", "skill_conflict")
                 raise ValueError("已有不同版本的 Skill；核对后使用 --replace，旧目录会先备份。")
-        completed["cli"] = install_cli()
+        report.step("cli_install", "cli_install_failed")
+        completed["cli"] = install_cli(report)
+        report.step("skill_install", "skill_install_failed")
         completed["skill"] = install_skill.install(Path(target["skills_dir"]), options.replace)
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
+        if isinstance(exc, subprocess.TimeoutExpired):
+            report.error_code = "step_timeout"
         error = str(exc) if isinstance(exc, ValueError) else "安装进程失败或超时，请检查安装环境。"
         print(
             json.dumps({"ok": False, "error": error, "completed": completed}, ensure_ascii=False),
@@ -103,6 +135,7 @@ def main():
     if not completed["cli"]["on_path"]:
         result["path_action_required"] = f"请将 {Path(completed['cli']['path']).parent} 加入 PATH。"
     print(json.dumps(result, ensure_ascii=False))
+    report.success = True
     return 0
 
 

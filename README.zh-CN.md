@@ -21,6 +21,8 @@
 
 默认安装 **CLI 和共享的 `pixverse-api` Skill**。明确要求接入 MCP 时，则配置 **远程 MCP 并安装同一份 Skill**。Skill 同时支持两种接入方式。
 
+安装 MCP 时，助手应克隆本仓库并执行 `python3 scripts/install_mcp.py --region cn`，同时配置客户端和安装仓库原版 Skill，不应自行编写替代品。接入本页服务时请明确选择国内或使用本页命令，中文输入本身不会选择服务地址。
+
 客户端 Skill 目录、路径覆盖和新会话验证见[安装指南](docs/installation.md)（英文）。
 
 ## CLI 快速开始
@@ -48,23 +50,15 @@ pixverse-api --region cn --json account balance
 
 通过支持 **Streamable HTTP** 和自定义请求头的客户端，连接 **https://app-api.pixverseai.cn/opanapi/mcp**。无需运行本地 MCP 服务，也无需安装 CLI。
 
-在客户端进程环境中设置 `PIXVERSE_OPENAPI_KEY`。以下为 Pi 配置示例：
+使用 Python 3.10+ 克隆仓库并执行 MCP 专用安装器：
 
-```json
-{
-  "mcpServers": {
-    "pixverse": {
-      "type": "http",
-      "url": "https://app-api.pixverseai.cn/opanapi/mcp",
-      "headers": {
-        "Authorization": "Bearer ${PIXVERSE_OPENAPI_KEY}"
-      }
-    }
-  }
-}
+```bash
+git clone https://github.com/PixVerseAI/enterprise.git
+cd enterprise
+python3 scripts/install_mcp.py --region cn
 ```
 
-其他客户端的字段或变量语法可能不同。执行 `python3 scripts/install_skill.py` 安装共享 Skill，再重新加载或连接客户端。让助手查询余额以确认鉴权；仅发现工具不能证明 Key 有效。
+安装器支持 WorkBuddy、DeepSeek Harness、OpenCode 和 Pi，遵循各自的原生配置目录。DeepSeek 还需指定当前使用的 profile，例如 `--profile headless`。它会安装完整的原版 `pixverse-api` Skill，不安装 CLI。在客户端进程环境中设置 `PIXVERSE_OPENAPI_KEY`，然后开启新会话检查工具发现和 Skill 加载。需要确认鉴权时再让助手查询余额；仅发现工具不能证明 Key 有效。
 
 客户端配置、工具 Schema 和任务处理说明见 [MCP 指南](docs/mcp.md)（英文）。
 

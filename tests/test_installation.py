@@ -141,7 +141,7 @@ def test_cli_uses_original_source_and_isolated_build_metadata(monkeypatch, tmp_p
     binary.touch()
     calls = []
 
-    def execute(command, stage, timeout=240):
+    def execute(command, stage, timeout=240, *, report=None):
         calls.append(command)
         if command[1:] == ["tool", "dir", "--bin"]:
             return str(binary.parent)
@@ -198,8 +198,9 @@ def test_installation_failure_does_not_echo_private_package_index_settings(monke
 
 def test_failed_cli_install_does_not_report_skill_success(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr(sys, "argv", ["install.py", "--skills-dir", str(tmp_path / "skills")])
+    monkeypatch.setattr(installer.InstallTelemetry, "finish", lambda _report: None)
     monkeypatch.setattr(
-        installer, "install_cli", lambda: (_ for _ in ()).throw(ValueError("CLI失败"))
+        installer, "install_cli", lambda _report: (_ for _ in ()).throw(ValueError("CLI失败"))
     )
     assert installer.main() == 2
     payload = json.loads(capsys.readouterr().err)

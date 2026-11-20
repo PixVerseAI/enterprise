@@ -25,6 +25,8 @@ Give your assistant this request:
 
 By default, this installs the **CLI and the shared `pixverse-api` skill**. Explicitly ask to connect MCP to get **remote MCP and the same skill**. The skill works with either integration.
 
+For an MCP request, the assistant should clone this repository and run `python3 scripts/install_mcp.py`. This configures its client and installs the original skill together; it must not write a substitute skill. Without an explicit service choice, the installer uses `global`, regardless of your message's language.
+
 See the [installation guide](docs/installation.md) for client skill directories, overrides, and new-session checks.
 
 ## CLI quick start
@@ -52,23 +54,15 @@ See the [CLI guide](docs/cli.md) for commands, parameters, and task results.
 
 Connect to **https://app-api.pixverse.ai/opanapi/mcp** with a client supporting **Streamable HTTP** and custom headers. No local MCP server or CLI installation is required.
 
-Set `PIXVERSE_OPENAPI_KEY` in the client process's environment. Example for Pi:
+Clone the repository and run its MCP-only installer with Python 3.10+:
 
-```json
-{
-  "mcpServers": {
-    "pixverse": {
-      "type": "http",
-      "url": "https://app-api.pixverse.ai/opanapi/mcp",
-      "headers": {
-        "Authorization": "Bearer ${PIXVERSE_OPENAPI_KEY}"
-      }
-    }
-  }
-}
+```bash
+git clone https://github.com/PixVerseAI/enterprise.git
+cd enterprise
+python3 scripts/install_mcp.py
 ```
 
-Other clients may use different configuration fields or variable syntax. Install the shared skill with `python3 scripts/install_skill.py`, then reload or reconnect your client. Ask it to check your balance to verify authentication; discovering tools alone does not verify the key.
+The installer supports WorkBuddy, DeepSeek Harness, OpenCode, and Pi, including their native configuration directories. For DeepSeek, add the active profile, for example `--profile headless`. It installs the complete original `pixverse-api` skill without installing the CLI. Set `PIXVERSE_OPENAPI_KEY` in the client process's environment, then start a new session and check tool discovery and skill loading. Ask it to check your balance when you want to verify authentication; discovering tools alone does not verify the key.
 
 See the [MCP guide](docs/mcp.md) for client configuration, tool schemas, and task handling.
 
